@@ -1,0 +1,6 @@
+fr: 
+  operator_prompt: "Quelle opération aimeriez-vous effectuer?\n    1) ajouter\n    2) soustraire\n    3) multiplier\n    4) diviser"
+  greeting: Calculateur d'arithmetique
+en: 
+  operator_prompt: "What operation would you like to perfom?\n    1) add\n    2) substract\n    3) multiply\n    4) divide"
+  greeting: Simple Arithmetic Calculator
