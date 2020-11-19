@@ -17,15 +17,15 @@ end
 
 class RPSGame
   def initialize
-    @human    = Player.new
-    @computer = Player.new
+    @human    = Human.new
+    @computer = Computer.new
   end
 
   def play
     display_welcome_message
     loop do
       human.choose
-      computer.random_choice
+      computer.choose
       @won_or_lost = human.compare(computer)
       display_choices(human, computer)
       display_winner(@won_or_lost)
@@ -76,6 +76,10 @@ class RPSGame
   end
 end
 
+class Move
+  WIN_MOVES = [['rock', 'scissors'], ['paper', 'rock'], ['scissors', 'paper']]
+end
+
 class Player
   VALID_CHOICE = ['rock', 'paper', 'scissors']
   VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
@@ -83,26 +87,6 @@ class Player
 
   def move
     @move.clone
-  end
-
-  def choose
-    clear_screen()
-    choice = ''
-    loop do
-      prompt "Choose one: #{VALID_CHOICE.join(', ')}"
-      print_shortcuts
-      choice = gets.chomp
-  
-      break if VALID_CHOICE.include?(choice)
-      break choice = VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
-      clear_screen()
-      puts 'Oops. That\'s not a valid choice.'
-    end
-    self.move = choice
-  end
-
-  def random_choice
-    self.move = VALID_CHOICE.sample
   end
 
   def compare(other_player)
@@ -124,6 +108,30 @@ class Player
     moves = [move1, move2]
     if WIN_MOVES.include? moves then true
     else false end
+  end
+end
+
+class Human < Player
+  def choose
+    clear_screen()
+    choice = ''
+    loop do
+      prompt "Choose one: #{VALID_CHOICE.join(', ')}"
+      print_shortcuts
+      choice = gets.chomp
+  
+      break if VALID_CHOICE.include?(choice)
+      break choice = VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
+      clear_screen()
+      puts 'Oops. That\'s not a valid choice.'
+    end
+    self.move = choice
+  end
+end
+
+class Computer < Player
+  def choose
+    self.move = VALID_CHOICE.sample
   end
 end
 
