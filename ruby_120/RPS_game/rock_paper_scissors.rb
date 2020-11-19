@@ -23,7 +23,7 @@ class RPSGame
     loop do
       human.reset_score
       computer.reset_score
-      round_loop
+      rounds_loop
       break unless play_again?
     end
     display_goodbye_message
@@ -40,20 +40,20 @@ class RPSGame
     STDIN.getch
   end
 
-  def round_loop
+  def rounds_loop
     loop do
-      human.choose
-      computer.choose
-      won_or_lost = human.compare(computer)
-      update_score(won_or_lost, human, computer)
-      display_score(human, computer)
-      display_round_results(won_or_lost, human.move, computer.move)
-      display_choices(human, computer)
-
+      play_round
       break if [human.score, computer.score].include? SCORE_TO_WIN
-
       any_key_to_continue
     end
+  end
+
+  def play_round
+    human.choose
+    computer.choose
+    won_or_lost = human.compare(computer)
+    update_score(won_or_lost, human, computer)
+    display_round_info
   end
 
   def update_score(won_or_lost, human, computer)
@@ -61,11 +61,17 @@ class RPSGame
     computer.increment_score if won_or_lost == 'lost'
   end
 
+  def display_round_info
+    display_score(human, computer)
+    display_result(won_or_lost, human.move, computer.move)
+    display_choices(human, computer)
+  end
+
   def display_score(human, computer)
     clear_screen()
     puts '==== SCORE ===='
     puts "Player: #{human.score}   " \
-    "Computer: #{computer.score}" , ''
+    "Computer: #{computer.score}", ''
   end
 
   def display_choices(human, computer)
@@ -73,18 +79,17 @@ class RPSGame
     puts "Computer chose: #{computer.move}", ''
   end
 
-  def display_round_results(won_or_lost, player_move, computer_move)
+  def display_result(won_or_lost, player_move, computer_move)
     case won_or_lost
     when 'won'
       prompt(player_move.attack_description(computer_move))
-      prompt 'You won this round.'
+      prompt 'You won this round.', ''
     when 'lost'
       prompt(computer_move.attack_description(player_move))
-      prompt 'You lost this round.'
+      prompt 'You lost this round.', ''
     when 'tie'
-      prompt 'This round is a tie.'
+      prompt 'This round is a tie.', ''
     end
-    puts ''
   end
 
   def any_key_to_continue
@@ -120,27 +125,27 @@ class Move
   end
 
   VERBS = {
-  "scissors" => {
-    "paper" => "cuts",
-    "lizard" => "decapitates"
-  },
-  "paper" => {
-    "rock" => "covers",
-    "Spock" => "disproves"
-  },
-  "rock" => {
-    "scissors" => "crushes",
-    "lizard" => "crushes"
-  },
-  "lizard" => {
-    "paper" => "eats",
-    "Spock" => "poisons"
-  },
-  "Spock" => {
-    "rock" => "vaporizes",
-    "scissors" => "crushes"
+    "scissors" => {
+      "paper" => "cuts",
+      "lizard" => "decapitates"
+    },
+    "paper" => {
+      "rock" => "covers",
+      "Spock" => "disproves"
+    },
+    "rock" => {
+      "scissors" => "crushes",
+      "lizard" => "crushes"
+    },
+    "lizard" => {
+      "paper" => "eats",
+      "Spock" => "poisons"
+    },
+    "Spock" => {
+      "rock" => "vaporizes",
+      "scissors" => "crushes"
+    }
   }
- }
 
   def initialize(value)
     @value = value
@@ -159,7 +164,7 @@ class Move
   end
 
   def attack_description(other_move)
-    "#{self} #{VERBS[self.value][other_move.value]} #{other_move}!"
+    "#{self} #{VERBS[value][other_move.value]} #{other_move}!"
   end
 
   protected
