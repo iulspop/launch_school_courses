@@ -24,6 +24,7 @@ class RPSGame
         human.choose
         computer.choose
         won_or_lost = human.compare(computer)
+        update_score(won_or_lost, human, computer)
         display_score(human, computer)
         display_choices(human, computer)
         display_round_results(won_or_lost, human.move, computer.move)
@@ -44,6 +45,11 @@ class RPSGame
     puts 'Let\'s Play Rock Paper Scissors!', ''
     prompt 'Press any key to start game...'
     STDIN.getch
+  end
+
+  def update_score(won_or_lost, human, computer)
+    human.increment_score    if won_or_lost == 'won'
+    computer.increment_score if won_or_lost == 'lost'
   end
 
   def display_score(human, computer)
@@ -172,9 +178,13 @@ class Player
     'tie'
   end
 
+  def increment_score
+    self.score += 1
+  end
+
   private
 
-  attr_writer :move
+  attr_writer :move, :score
 end
 
 class Human < Player
