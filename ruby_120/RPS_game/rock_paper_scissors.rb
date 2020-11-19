@@ -23,21 +23,7 @@ class RPSGame
     loop do
       human.reset_score
       computer.reset_score
-
-      loop do
-        human.choose
-        computer.choose
-        won_or_lost = human.compare(computer)
-        update_score(won_or_lost, human, computer)
-        display_score(human, computer)
-        display_round_results(won_or_lost, human.move, computer.move)
-        display_choices(human, computer)
-
-        break if [human.score, computer.score].include? SCORE_TO_WIN
-
-        any_key_to_continue
-      end
-
+      round_loop
       break unless play_again?
     end
     display_goodbye_message
@@ -54,7 +40,21 @@ class RPSGame
     STDIN.getch
   end
 
+  def round_loop
+    loop do
+      human.choose
+      computer.choose
+      won_or_lost = human.compare(computer)
+      update_score(won_or_lost, human, computer)
+      display_score(human, computer)
+      display_round_results(won_or_lost, human.move, computer.move)
+      display_choices(human, computer)
 
+      break if [human.score, computer.score].include? SCORE_TO_WIN
+
+      any_key_to_continue
+    end
+  end
 
   def update_score(won_or_lost, human, computer)
     human.increment_score    if won_or_lost == 'won'
