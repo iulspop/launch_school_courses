@@ -137,6 +137,7 @@ class Human < Player
       choice = gets.chomp
       break choice if VALID_CHOICE.include?(choice)
       break VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
+
       clear_screen()
       puts 'Oops. That\'s not a valid choice.'
     end
