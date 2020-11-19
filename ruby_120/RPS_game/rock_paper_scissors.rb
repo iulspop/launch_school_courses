@@ -23,11 +23,14 @@ class RPSGame
 
   def play
     display_welcome_message
-    human.choose
-    computer.random_choice
-    @won_or_lost = human.compare(computer)
-    display_choices(human, computer)
-    display_winner(@won_or_lost)
+    loop do
+      human.choose
+      computer.random_choice
+      @won_or_lost = human.compare(computer)
+      display_choices(human, computer)
+      display_winner(@won_or_lost)
+      break unless play_again?
+    end
     display_goodbye_message
   end
 
@@ -50,16 +53,21 @@ class RPSGame
 
   def display_winner(won_or_lost)
     case won_or_lost
-    when 'won'
-      prompt 'You won!'
-    when 'lost'
-      prompt 'You lost!'
-    when 'tie'
-      prompt 'It\'s a tie!'
-    end
+    when 'won'  then prompt 'You won!'
+    when 'lost' then prompt 'You lost!'
+    when 'tie'  then prompt 'It\'s a tie!' end
     puts ''
-    prompt 'Press any key to end game...'
-    STDIN.getch
+  end
+
+  def play_again?
+    loop do
+      prompt 'Play again?'
+      answer = gets.chomp.downcase
+      return true  if ['yes', 'y'].include?(answer)
+      return false if ['no', 'n'].include?(answer)
+      clear_screen()
+      puts 'Oops. Please enter Yes or No.'
+    end
   end
 
   def display_goodbye_message
