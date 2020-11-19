@@ -1,10 +1,3 @@
-=begin
-Rock paper scissors I a game where two players select an piece, if their piece wins they won the round. first to win three rounds wins the game.
-
-nouns: player, move, rule
-verbs: choose, compare
-=end
-
 require "io/console"
 
 def prompt(message, *extra)
@@ -12,7 +5,7 @@ def prompt(message, *extra)
 end
 
 def clear_screen
-  # system('clear') || system('clr')
+  system('clear') || system('clr')
 end
 
 class RPSGame
@@ -116,15 +109,14 @@ class Player
   end
 
   def compare(other_player)
-    return 'won'  if self.move > other_player.move
-    return 'lost' if self.move < other_player.move
+    return 'won'  if move > other_player.move
+    return 'lost' if move < other_player.move
     'tie'
   end
 
   private
 
   attr_writer :move
-
 end
 
 class Human < Player
@@ -132,25 +124,29 @@ class Human < Player
 
   def choose
     clear_screen()
-    choice = ''
-    loop do
-      prompt "Choose one: #{VALID_CHOICE.join(', ')}"
-      print_shortcuts
-      choice = gets.chomp
-  
-      break if VALID_CHOICE.include?(choice)
-      break choice = VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
-      clear_screen()
-      puts 'Oops. That\'s not a valid choice.'
-    end
+    choice = choice_prompt
     self.move = Move.new(choice)
   end
 
   private
 
+  def choice_prompt
+    loop do
+      prompt "Choose one: #{VALID_CHOICE.join(', ')}"
+      print_shortcuts
+      choice = gets.chomp
+      break choice if VALID_CHOICE.include?(choice)
+      break VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
+      clear_screen()
+      puts 'Oops. That\'s not a valid choice.'
+    end
+  end
+
   def print_shortcuts
     prompt 'Shortcuts:'
-    VALID_SHORTCUT.each { |shortcut, choice| puts "   #{shortcut} for #{choice}" }
+    VALID_SHORTCUT.each do |shortcut, choice|
+      puts "   #{shortcut} for #{choice}"
+    end
   end
 end
 
