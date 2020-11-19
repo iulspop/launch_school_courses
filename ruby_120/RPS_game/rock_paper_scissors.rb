@@ -12,6 +12,14 @@ VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
 
 class RPSGame
   SCORE_TO_WIN = 5
+  RULES_MESSAGE = <<-MSG
+The rules are: 
+    - Scissors cuts Paper, decapitates Lizard.
+    - Paper covers Rock, disproves Spock.
+    - Rock crushes Scissors, crushes Lizard.
+    - Lizard eats Paper, poisons Spock.
+    - Spock vaporizes Rock, crushes Scissors.
+MSG
 
   def initialize
     @human    = Human.new
@@ -35,7 +43,13 @@ class RPSGame
 
   def display_welcome_message
     clear_screen()
-    puts 'Let\'s Play Rock Paper Scissors!', ''
+    puts 'Let\'s Play "Rock Paper Scissors Lizard Spock!"', ''
+    sleep 0.15
+
+    prompt(RULES_MESSAGE)
+    print "\n"
+    prompt 'The first to score 5 points wins!', ''
+
     prompt 'Press any key to start game...'
     STDIN.getch
   end
@@ -53,7 +67,7 @@ class RPSGame
     computer.choose
     won_or_lost = human.compare(computer)
     update_score(won_or_lost, human, computer)
-    display_round_info
+    display_round_info(won_or_lost)
   end
 
   def update_score(won_or_lost, human, computer)
@@ -61,7 +75,7 @@ class RPSGame
     computer.increment_score if won_or_lost == 'lost'
   end
 
-  def display_round_info
+  def display_round_info(won_or_lost)
     display_score(human, computer)
     display_result(won_or_lost, human.move, computer.move)
     display_choices(human, computer)
