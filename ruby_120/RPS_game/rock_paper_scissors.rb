@@ -12,7 +12,7 @@ def prompt(message, *extra)
 end
 
 def clear_screen
-  system('clear') || system('clr')
+  # system('clear') || system('clr')
 end
 
 class RPSGame
@@ -47,8 +47,8 @@ class RPSGame
 
   def display_choices(human, computer)
     clear_screen()
-    puts "You chose:      #{human.move.capitalize}"
-    puts "Computer chose: #{computer.move.capitalize}", ''
+    puts "You chose:      #{human.move}"
+    puts "Computer chose: #{computer.move}", ''
   end
 
   def display_winner(won_or_lost)
@@ -78,20 +78,46 @@ end
 
 class Move
   WIN_MOVES = [['rock', 'scissors'], ['paper', 'rock'], ['scissors', 'paper']]
+
+  def initialize(value)
+    @value = value
+  end
+
+  def >(other_move)
+    win?(self, other_move)
+  end
+
+  def <(other_move)
+    win?(other_move, self)
+  end
+
+  def to_s
+    @value.capitalize
+  end
+
+  protected
+
+  attr_reader :value
+
+  private
+
+  def win?(move1, move2)
+    moves = [move1.value, move2.value]
+    if WIN_MOVES.include? moves then true
+    else false end
+  end
 end
 
 class Player
   VALID_CHOICE = ['rock', 'paper', 'scissors']
-  VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
-  WIN_MOVES = [['rock', 'scissors'], ['paper', 'rock'], ['scissors', 'paper']]
 
   def move
     @move.clone
   end
 
   def compare(other_player)
-    return 'won'  if win?(self.move, other_player.move)
-    return 'lost' if win?(other_player.move, self.move)
+    return 'won'  if self.move > other_player.move
+    return 'lost' if self.move < other_player.move
     'tie'
   end
 
@@ -99,19 +125,11 @@ class Player
 
   attr_writer :move
 
-  def print_shortcuts
-    prompt 'Shortcuts:'
-    VALID_SHORTCUT.each { |shortcut, choice| puts "   #{shortcut} for #{choice}" }
-  end
-
-  def win?(move1, move2)
-    moves = [move1, move2]
-    if WIN_MOVES.include? moves then true
-    else false end
-  end
 end
 
 class Human < Player
+  VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
+
   def choose
     clear_screen()
     choice = ''
@@ -125,13 +143,20 @@ class Human < Player
       clear_screen()
       puts 'Oops. That\'s not a valid choice.'
     end
-    self.move = choice
+    self.move = Move.new(choice)
+  end
+
+  private
+
+  def print_shortcuts
+    prompt 'Shortcuts:'
+    VALID_SHORTCUT.each { |shortcut, choice| puts "   #{shortcut} for #{choice}" }
   end
 end
 
 class Computer < Player
   def choose
-    self.move = VALID_CHOICE.sample
+    self.move = Move.new(VALID_CHOICE.sample)
   end
 end
 
