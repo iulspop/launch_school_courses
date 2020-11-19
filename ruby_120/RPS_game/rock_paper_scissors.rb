@@ -19,11 +19,17 @@ class RPSGame
   def play
     display_welcome_message
     loop do
-      human.choose
-      computer.choose
-      won_or_lost = human.compare(computer)
-      display_choices(human, computer)
-      display_round_results(won_or_lost, human.move, computer.move)
+
+      loop do
+        human.choose
+        computer.choose
+        won_or_lost = human.compare(computer)
+        display_score(human, computer)
+        display_choices(human, computer)
+        display_round_results(won_or_lost, human.move, computer.move)
+        break
+      end
+
       break unless play_again?
     end
     display_goodbye_message
@@ -40,8 +46,14 @@ class RPSGame
     STDIN.getch
   end
 
-  def display_choices(human, computer)
+  def display_score(human, computer)
     clear_screen()
+    puts '==== SCORE ===='
+    puts "Player: #{human.score}   " \
+    "Computer: #{computer.score}" , ''
+  end
+
+  def display_choices(human, computer)
     puts "You chose:      #{human.move}"
     puts "Computer chose: #{computer.move}", ''
   end
@@ -144,6 +156,12 @@ class Move
 end
 
 class Player
+  attr_reader :score
+
+  def initialize
+    @score = 0
+  end
+
   def move
     @move.clone
   end
