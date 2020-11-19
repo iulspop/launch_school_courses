@@ -21,9 +21,9 @@ class RPSGame
     loop do
       human.choose
       computer.choose
-      @won_or_lost = human.compare(computer)
+      won_or_lost = human.compare(computer)
       display_choices(human, computer)
-      display_winner(@won_or_lost)
+      display_round_results(won_or_lost, human.move, computer.move)
       break unless play_again?
     end
     display_goodbye_message
@@ -46,11 +46,17 @@ class RPSGame
     puts "Computer chose: #{computer.move}", ''
   end
 
-  def display_winner(won_or_lost)
+  def display_round_results(won_or_lost, player_move, computer_move)
     case won_or_lost
-    when 'won'  then prompt 'You won!'
-    when 'lost' then prompt 'You lost!'
-    when 'tie'  then prompt 'It\'s a tie!' end
+    when 'won'
+      prompt(player_move.attack_description(computer_move))
+      prompt 'You won this round.'
+    when 'lost'
+      prompt(computer_move.attack_description(player_move))
+      prompt 'You lost this round.'
+    when 'tie'
+      prompt 'This round is a tie.'
+    end
     puts ''
   end
 
@@ -81,6 +87,29 @@ class Move
     when 'Spock'    then ['scissors', 'rock'].include?(second) end
   end
 
+  VERBS = {
+  "scissors" => {
+    "paper" => "cuts",
+    "lizard" => "decapitates"
+  },
+  "paper" => {
+    "rock" => "covers",
+    "Spock" => "disproves"
+  },
+  "rock" => {
+    "scissors" => "crushes",
+    "lizard" => "crushes"
+  },
+  "lizard" => {
+    "paper" => "eats",
+    "Spock" => "poisons"
+  },
+  "Spock" => {
+    "rock" => "vaporizes",
+    "scissors" => "crushes"
+  }
+ }
+
   def initialize(value)
     @value = value
   end
@@ -95,6 +124,10 @@ class Move
 
   def to_s
     @value.capitalize
+  end
+
+  def attack_description(other_move)
+    "#{self} #{VERBS[self.value][other_move.value]} #{other_move}!"
   end
 
   protected
