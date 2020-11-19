@@ -71,6 +71,7 @@ end
 class Player
   VALID_CHOICE = ['rock', 'paper', 'scissors']
   VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
+  WIN_MOVES = [['rock', 'scissors'], ['paper', 'rock'], ['scissors', 'paper']]
 
   def move
     @move.clone
@@ -112,16 +113,9 @@ class Player
   end
 
   def win?(move1, move2)
-    case move1
-    when 'rock'
-      true if move2 == 'scissors'
-    when 'paper'
-      true if move2 == 'rock'
-    when 'scissors'
-      true if move2 == 'paper'
-    else
-      false
-    end
+    moves = [move1, move2]
+    return true if WIN_MOVES.include? moves
+    false
   end
 end
 
