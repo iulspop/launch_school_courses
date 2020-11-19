@@ -11,6 +11,8 @@ end
 VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
 
 class RPSGame
+  SCORE_TO_WIN = 5
+
   def initialize
     @human    = Human.new
     @computer = Computer.new
@@ -19,6 +21,8 @@ class RPSGame
   def play
     display_welcome_message
     loop do
+      human.reset_score
+      computer.reset_score
 
       loop do
         human.choose
@@ -26,9 +30,12 @@ class RPSGame
         won_or_lost = human.compare(computer)
         update_score(won_or_lost, human, computer)
         display_score(human, computer)
-        display_choices(human, computer)
         display_round_results(won_or_lost, human.move, computer.move)
-        break
+        display_choices(human, computer)
+
+        break if [human.score, computer.score].include? SCORE_TO_WIN
+
+        any_key_to_continue
       end
 
       break unless play_again?
@@ -46,6 +53,8 @@ class RPSGame
     prompt 'Press any key to start game...'
     STDIN.getch
   end
+
+
 
   def update_score(won_or_lost, human, computer)
     human.increment_score    if won_or_lost == 'won'
@@ -76,6 +85,11 @@ class RPSGame
       prompt 'This round is a tie.'
     end
     puts ''
+  end
+
+  def any_key_to_continue
+    prompt 'Press any key to start next round...'
+    STDIN.getch
   end
 
   def play_again?
@@ -180,6 +194,10 @@ class Player
 
   def increment_score
     self.score += 1
+  end
+
+  def reset_score
+    self.score = 0
   end
 
   private
