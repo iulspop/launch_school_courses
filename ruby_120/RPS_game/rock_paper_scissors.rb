@@ -8,6 +8,8 @@ def clear_screen
   system('clear') || system('clr')
 end
 
+VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
+
 class RPSGame
   def initialize
     @human    = Human.new
@@ -70,7 +72,14 @@ class RPSGame
 end
 
 class Move
-  WIN_MOVES = [['rock', 'scissors'], ['paper', 'rock'], ['scissors', 'paper']]
+  WIN_MOVES = VALID_CHOICE.permutation(2).to_a.select do |(first, second)|
+    case first
+    when 'rock'     then ['scissors', 'lizard'].include?(second)
+    when 'paper'    then ['rock', 'Spock'].include?(second)
+    when 'scissors' then ['paper', 'lizard'].include?(second)
+    when 'lizard'   then ['Spock', 'paper'].include?(second)
+    when 'Spock'    then ['scissors', 'rock'].include?(second) end
+  end
 
   def initialize(value)
     @value = value
@@ -102,8 +111,6 @@ class Move
 end
 
 class Player
-  VALID_CHOICE = ['rock', 'paper', 'scissors']
-
   def move
     @move.clone
   end
