@@ -114,8 +114,8 @@ class Player
 
   def win?(move1, move2)
     moves = [move1, move2]
-    return true if WIN_MOVES.include? moves
-    false
+    if WIN_MOVES.include? moves then true
+    else false end
   end
 end
 
