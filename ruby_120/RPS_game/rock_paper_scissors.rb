@@ -149,13 +149,13 @@ MSG
     clear_screen()
     puts ROBOT_ART, ''
     puts '==== SCORE ===='
-    puts "Player: #{human.score}   " \
-    "Computer: #{computer.score}", ''
+    puts "#{human.name}: #{human.score}   " \
+    "#{computer.name}: #{computer.score}", ''
   end
 
   def display_choices(human, computer)
-    puts "You chose:      #{human.move}"
-    puts "Computer chose: #{computer.move}", ''
+    puts "#{human.name} chose: #{human.move}"
+    puts "#{computer.name} chose: #{computer.move}", ''
   end
 
   def display_result(won_or_lost, player_move, computer_move)
