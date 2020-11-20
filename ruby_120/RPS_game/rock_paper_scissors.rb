@@ -74,7 +74,8 @@ MSG
 
   def initialize
     @human    = Human.new
-    @computer = Robots.const_get(Robots::constants.sample).new
+    @computer = Robots::YesMan.new
+    # @computer = Robots.const_get(Robots.constants.sample).new
   end
 
   def play
@@ -84,6 +85,7 @@ MSG
       human.reset_score
       computer.reset_score
       rounds_loop
+      display_winner
       break unless play_again?
     end
     display_goodbye_message
@@ -166,6 +168,18 @@ MSG
       prompt 'You lost this round.', ''
     when 'tie'
       prompt 'This round is a tie.', ''
+    end
+  end
+
+  def display_winner
+    if human.score == 5
+      puts "YOU WON!!!\n" \
+           "#{human.name} deactivates #{computer.name} and saves the galaxy!"
+    else
+      puts "YOU LOST!!!\n" \
+           "#{human.name}'s elements are deconstructed and " \
+           "turned into paper clips\n" \
+           "The galaxy is doomed...\n"
     end
   end
 
@@ -266,7 +280,6 @@ class Human < Player
       choice = gets.chomp
       break choice if VALID_CHOICE.include?(choice)
       break VALID_SHORTCUT[choice] if VALID_SHORTCUT.include?(choice)
-
       clear_screen()
       puts 'Oops. That\'s not a valid choice.'
     end
@@ -312,7 +325,11 @@ module Robots
     end
 
     def choose(opponent_last_move)
-      self.move = opponent_last_move || Move.new(VALID_CHOICE.sample)
+      if opponent_last_move && opponent_last_move != ''
+        self.move = Move.new(opponent_last_move)
+      else
+        self.move = Move.new(VALID_CHOICE.sample)
+      end
     end
   end
 
