@@ -17,14 +17,13 @@ class RPSGame
   SCORE_TO_WIN = 5
   RULES_MESSAGE = <<-MSG
 The rules are: 
-    - Scissors cuts Paper, decapitates Lizard.
-    - Paper covers Rock, disproves Spock.
-    - Rock crushes Scissors, crushes Lizard.
-    - Lizard eats Paper, poisons Spock.
-    - Spock vaporizes Rock, crushes Scissors.
+  - Scissors cuts Paper, decapitates Lizard.
+  - Paper covers Rock, disproves Spock.
+  - Rock crushes Scissors, crushes Lizard.
+  - Lizard eats Paper, poisons Spock.
+  - Spock vaporizes Rock, crushes Scissors.
 
-    The first to win five rounds wins the tournament!
-
+The first to win five rounds wins the tournament!
 MSG
 
   def initialize
@@ -34,6 +33,7 @@ MSG
 
   def play
     display_welcome_message
+    display_rules_message
     loop do
       human.reset_score
       computer.reset_score
@@ -48,14 +48,26 @@ MSG
   attr_reader :human, :computer
 
   def display_welcome_message
+    intro_message = <<-MSG
+Oh #{human.name}, the Great Hero,
+
+You've been called to defend the Galaxy from the evil #{computer.name} robot.
+#{computer.name} is bent on turning us all into paper clips! 
+
+Go challenge the thinking machine to a \"Rock Paper Scissors Lizard Spock!\" tournament.
+Once victorious, you can access its code and deactivate the paper clip mania!
+
+Beware, each robot plays in its own way. That is the key to saving the Galaxy!
+MSG
     clear_screen()
-    puts "Space hero #{human.name}, you've been called to defend the Galaxy from the evil #{computer.name} robot. #{computer.name} is bent on turning us all into paper clips! Go challenge the thinking machine to a \"Rock Paper Scissors Lizard Spock!\" tournament. Once victorious, you will have access to it's code, then deactivate its paper clip mania!"
-    sleep 0.15
+    puts intro_message, ''
+    any_key_to_continue('Press any key to see tournament rules...')
+  end
 
-    prompt(RULES_MESSAGE)
-
-    prompt 'Press any key to start game...'
-    STDIN.getch
+  def display_rules_message
+    clear_screen()
+    puts RULES_MESSAGE, ''
+    any_key_to_continue('Press any key to challenge the robot...')
   end
 
   def rounds_loop
@@ -175,7 +187,7 @@ class Human < Player
     clear_screen()
     name = ''
     loop do
-      prompt 'Please enter a name for your character:'
+      prompt 'Please enter a name for your hero'
       prompt '(Only letters and at least three chars)'
       name = gets.chomp
       break if name.match?(/^[a-z]{3,}$/i)
