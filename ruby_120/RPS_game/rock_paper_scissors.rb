@@ -13,6 +13,54 @@ def any_key_to_continue(message)
   STDIN.getch
 end
 
+EARTH_ART = <<-MSG
+o               .        ___---___                    .                   
+       .              .--\\        --.     .     .         .
+                    ./.;_.\\     __/~ \\.     
+                   /;  / `-'  __\\    . \\                            
+ .        .       / ,--'     / .   .;   \\        |
+                 | .|       /       __   |      -O-       .
+                |__/    __ |  . ;   \\ | . |      |
+                |      /  \\\\_    . ;| \\___|    
+   .    o       |      \\  .~\\___,--'     |           .
+                 |     | . ; ~~~~\\_    __|
+    |             \\    \\   .  .  ; \\  /_/   .
+   -O-        .    \\   /         . |  ~/                  .
+    |    .          ~\\ \\   .      /  /~          o
+  .                   ~--___ ; ___--~       
+                 .          ---         .              
+MSG
+
+SATURN_ART = <<-MSG
+        ~+
+
+                 *       +
+           '                  |
+       ()    .-.,="``"=.    - o -
+             '=/_       \\     |
+          *   |  '=._    |
+               \\     `=./`,        '
+            .   '=.__.=' `='      *
+   +                         +
+        O      *        '       .
+MSG
+
+ROBOT_ART = <<-MSG
+o
+ \\_/\\o
+( Oo)                     \\|/
+(_=-)  .===O-  ~~Z~A~P~~  -O-
+/   \\_/U'                 /|\\
+||  |_/
+\\\\  |
+{K ||
+ | PP
+ | ||
+ (__\\\\
+MSG
+
+
+
 class RPSGame
   SCORE_TO_WIN = 5
   RULES_MESSAGE = <<-MSG
@@ -49,7 +97,7 @@ MSG
 
   def display_welcome_message
     intro_message = <<-MSG
-Oh #{human.name}, the Great Hero,
+Oh #{human.name}, the Space Hero,
 
 You've been called to defend the Galaxy from the evil #{computer.name} robot.
 #{computer.name} is bent on turning us all into paper clips! 
@@ -99,6 +147,7 @@ MSG
 
   def display_score(human, computer)
     clear_screen()
+    puts ROBOT_ART, ''
     puts '==== SCORE ===='
     puts "Player: #{human.score}   " \
     "Computer: #{computer.score}", ''
@@ -187,7 +236,8 @@ class Human < Player
     clear_screen()
     name = ''
     loop do
-      prompt 'Please enter a name for your hero'
+      puts EARTH_ART, ''
+      prompt 'Please enter a name for your space hero'
       prompt '(Only letters and at least three chars)'
       name = gets.chomp
       break if name.match?(/^[a-z]{3,}$/i)
@@ -199,6 +249,7 @@ class Human < Player
 
   def choice_prompt
     loop do
+      puts SATURN_ART, ''
       prompt "Choose one: #{VALID_CHOICE.join(', ')}"
       print_shortcuts
       choice = gets.chomp
