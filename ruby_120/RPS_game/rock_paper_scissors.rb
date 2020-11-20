@@ -5,7 +5,7 @@ def prompt(message, *extra)
 end
 
 def clear_screen
-  # system('clear') || system('clr')
+  system('clear') || system('clr')
 end
 
 def any_key_to_continue(message)
@@ -74,7 +74,7 @@ MSG
 
   def initialize
     @human    = Human.new
-    @computer = Robots::OldBob.new
+    @computer = Robots.const_get(Robots::constants.sample).new
   end
 
   def play
