@@ -8,6 +8,11 @@ def clear_screen
   system('clear') || system('clr')
 end
 
+def any_key_to_continue(message)
+  prompt message
+  STDIN.getch
+end
+
 class RPSGame
   SCORE_TO_WIN = 5
   RULES_MESSAGE = <<-MSG
@@ -17,12 +22,18 @@ The rules are:
     - Rock crushes Scissors, crushes Lizard.
     - Lizard eats Paper, poisons Spock.
     - Spock vaporizes Rock, crushes Scissors.
+
+    The first to win five rounds wins the tournament!
+
 MSG
+
+  def initialize
+    @human    = Human.new
+    @computer = Computer.new
+  end
 
   def play
     display_welcome_message
-    @human    = Human.new
-    @computer = Computer.new
     loop do
       human.reset_score
       computer.reset_score
@@ -38,12 +49,10 @@ MSG
 
   def display_welcome_message
     clear_screen()
-    puts 'Let\'s Play "Rock Paper Scissors Lizard Spock!"', ''
+    puts "Space hero #{human.name}, you've been called to defend the Galaxy from the evil #{computer.name} robot. #{computer.name} is bent on turning us all into paper clips! Go challenge the thinking machine to a \"Rock Paper Scissors Lizard Spock!\" tournament. Once victorious, you will have access to it's code, then deactivate its paper clip mania!"
     sleep 0.15
 
     prompt(RULES_MESSAGE)
-    print "\n"
-    prompt 'The first to score 5 points wins!', ''
 
     prompt 'Press any key to start game...'
     STDIN.getch
@@ -53,7 +62,7 @@ MSG
     loop do
       play_round
       break if [human.score, computer.score].include? SCORE_TO_WIN
-      any_key_to_continue
+      any_key_to_continue('Press any key to start next round...')
     end
   end
 
@@ -99,11 +108,6 @@ MSG
     when 'tie'
       prompt 'This round is a tie.', ''
     end
-  end
-
-  def any_key_to_continue
-    prompt 'Press any key to start next round...'
-    STDIN.getch
   end
 
   def play_again?
@@ -178,7 +182,7 @@ class Human < Player
       clear_screen()
       puts "Oops, please enter a valid name"
     end
-    self.name = name
+    self.name = name.capitalize
   end
 
   def choice_prompt
@@ -204,7 +208,8 @@ end
 
 class Computer < Player
   def set_name
-    self.name = ['Robo-Raptor', 'Galactron', 'Yes Man', 'Tik-Tok', 'Old B.O.B']
+    self.name =
+    ['Robo-Raptor', 'Galactron', 'Yes Man', 'Tik-Tok', 'Old B.O.B'].sample
   end
 
   def choose
