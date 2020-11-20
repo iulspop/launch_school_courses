@@ -5,7 +5,7 @@ def prompt(message, *extra)
 end
 
 def clear_screen
-  system('clear') || system('clr')
+  # system('clear') || system('clr')
 end
 
 def any_key_to_continue(message)
@@ -103,7 +103,7 @@ You've been called to defend the Galaxy from the evil #{computer.name} robot.
 #{computer.name} is bent on turning us all into paper clips! 
 
 Go challenge the thinking machine to a \"Rock Paper Scissors Lizard Spock!\" tournament.
-Once victorious, you can access its code and deactivate the paper clip mania!
+Once victorious, access its code and deactivate the paper clip maximizer!
 
 Beware, each robot plays in its own way. That is the key to saving the Galaxy!
 MSG
@@ -127,8 +127,8 @@ MSG
   end
 
   def play_round
+    computer.choose(human.last_move)
     human.choose
-    computer.choose
     won_or_lost = human.compare(computer)
     update_score(won_or_lost, human, computer)
     display_round_info(won_or_lost)
@@ -196,10 +196,15 @@ class Player
   def initialize
     set_name
     @score = 0
+    @move_history = []
   end
 
   def move
     @move.clone
+  end
+
+  def last_move
+    @move_history[-1].clone.to_s.downcase
   end
 
   def compare(other_player)
@@ -218,7 +223,12 @@ class Player
 
   private
 
-  attr_writer :move, :score, :name
+  attr_writer :score, :name
+
+  def move=(choice)
+    @move_history << choice
+    @move = choice
+  end
 end
 
 class Human < Player
@@ -275,8 +285,31 @@ class Computer < Player
     ['Robo-Raptor', 'Galactron', 'Yes Man', 'Tik-Tok', 'Old B.O.B'].sample
   end
 
-  def choose
-    self.move = Move.new(VALID_CHOICE.sample)
+  def choose(opponent_last_move)
+    case name
+    when 'Robo-Raptor'
+      if ['rock', 'scissors'].include? opponent_last_move
+        self.move = Move.new('Spock')
+      else
+        self.move = Move.new('lizard')
+      end
+    when 'Galactron'
+      self.move = Move.new(VALID_CHOICE.sample)
+    when 'Yes Man'
+      self.move = opponent_last_move || Move.new(VALID_CHOICE.sample)
+    when 'Tik-Tok'
+      if ['paper', 'lizard'].include? opponent_last_move
+        self.move = Move.new('scissors')
+      else
+        self.move = Move.new('Spock')
+      end
+    when 'Old B.O.B'
+      if ['paper', 'Spock'].include? opponent_last_move
+        self.move = Move.new('paper')
+      else
+        self.move = Move.new('rock')
+      end
+    end
   end
 end
 
