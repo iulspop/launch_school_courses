@@ -74,8 +74,7 @@ MSG
 
   def initialize
     @human    = Human.new
-    @computer = Robots::YesMan.new
-    # @computer = Robots.const_get(Robots.constants.sample).new
+    @computer = Robots.const_get(Robots.constants.sample).new
   end
 
   def play
@@ -325,11 +324,12 @@ module Robots
     end
 
     def choose(opponent_last_move)
-      if opponent_last_move && opponent_last_move != ''
-        self.move = Move.new(opponent_last_move)
-      else
-        self.move = Move.new(VALID_CHOICE.sample)
-      end
+      self.move =
+        if opponent_last_move && opponent_last_move != ''
+          Move.new(opponent_last_move)
+        else
+          Move.new(VALID_CHOICE.sample)
+        end
     end
   end
 
