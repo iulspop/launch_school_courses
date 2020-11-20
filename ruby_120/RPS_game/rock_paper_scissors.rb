@@ -8,8 +8,6 @@ def clear_screen
   system('clear') || system('clr')
 end
 
-VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
-
 class RPSGame
   SCORE_TO_WIN = 5
   RULES_MESSAGE = <<-MSG
@@ -128,73 +126,9 @@ MSG
   end
 end
 
-class Move
-  WIN_MOVES = VALID_CHOICE.permutation(2).to_a.select do |(first, second)|
-    case first
-    when 'rock'     then ['scissors', 'lizard'].include?(second)
-    when 'paper'    then ['rock', 'Spock'].include?(second)
-    when 'scissors' then ['paper', 'lizard'].include?(second)
-    when 'lizard'   then ['Spock', 'paper'].include?(second)
-    when 'Spock'    then ['scissors', 'rock'].include?(second) end
-  end
-
-  VERBS = {
-    "scissors" => {
-      "paper" => "cuts",
-      "lizard" => "decapitates"
-    },
-    "paper" => {
-      "rock" => "covers",
-      "Spock" => "disproves"
-    },
-    "rock" => {
-      "scissors" => "crushes",
-      "lizard" => "crushes"
-    },
-    "lizard" => {
-      "paper" => "eats",
-      "Spock" => "poisons"
-    },
-    "Spock" => {
-      "rock" => "vaporizes",
-      "scissors" => "crushes"
-    }
-  }
-
-  def initialize(value)
-    @value = value
-  end
-
-  def >(other_move)
-    win?(self, other_move)
-  end
-
-  def <(other_move)
-    win?(other_move, self)
-  end
-
-  def to_s
-    @value.capitalize
-  end
-
-  def attack_description(other_move)
-    "#{self} #{VERBS[value][other_move.value]} #{other_move}!"
-  end
-
-  protected
-
-  attr_reader :value
-
-  private
-
-  def win?(move1, move2)
-    moves = [move1.value, move2.value]
-    if WIN_MOVES.include? moves then true
-    else false end
-  end
-end
-
 class Player
+  VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
+
   attr_reader :score
 
   def initialize
@@ -259,6 +193,72 @@ end
 class Computer < Player
   def choose
     self.move = Move.new(VALID_CHOICE.sample)
+  end
+end
+
+class Move
+  WIN_MOVES = (Player::VALID_CHOICE).permutation(2).to_a.select do |(first, second)|
+    case first
+    when 'rock'     then ['scissors', 'lizard'].include?(second)
+    when 'paper'    then ['rock', 'Spock'].include?(second)
+    when 'scissors' then ['paper', 'lizard'].include?(second)
+    when 'lizard'   then ['Spock', 'paper'].include?(second)
+    when 'Spock'    then ['scissors', 'rock'].include?(second) end
+  end
+
+  VERBS = {
+    "scissors" => {
+      "paper" => "cuts",
+      "lizard" => "decapitates"
+    },
+    "paper" => {
+      "rock" => "covers",
+      "Spock" => "disproves"
+    },
+    "rock" => {
+      "scissors" => "crushes",
+      "lizard" => "crushes"
+    },
+    "lizard" => {
+      "paper" => "eats",
+      "Spock" => "poisons"
+    },
+    "Spock" => {
+      "rock" => "vaporizes",
+      "scissors" => "crushes"
+    }
+  }
+
+  def initialize(value)
+    @value = value
+  end
+
+  def >(other_move)
+    win?(self, other_move)
+  end
+
+  def <(other_move)
+    win?(other_move, self)
+  end
+
+  def to_s
+    @value.capitalize
+  end
+
+  def attack_description(other_move)
+    "#{self} #{VERBS[value][other_move.value]} #{other_move}!"
+  end
+
+  protected
+
+  attr_reader :value
+
+  private
+
+  def win?(move1, move2)
+    moves = [move1.value, move2.value]
+    if WIN_MOVES.include? moves then true
+    else false end
   end
 end
 
