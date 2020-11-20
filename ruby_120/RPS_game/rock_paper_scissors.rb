@@ -19,13 +19,10 @@ The rules are:
     - Spock vaporizes Rock, crushes Scissors.
 MSG
 
-  def initialize
-    @human    = Human.new
-    @computer = Computer.new
-  end
-
   def play
     display_welcome_message
+    @human    = Human.new
+    @computer = Computer.new
     loop do
       human.reset_score
       computer.reset_score
@@ -129,9 +126,10 @@ end
 class Player
   VALID_CHOICE = ['rock', 'paper', 'scissors', 'lizard', 'Spock']
 
-  attr_reader :score
+  attr_reader :score, :name
 
   def initialize
+    set_name
     @score = 0
   end
 
@@ -155,7 +153,7 @@ class Player
 
   private
 
-  attr_writer :move, :score
+  attr_writer :move, :score, :name
 end
 
 class Human < Player
@@ -168,6 +166,20 @@ class Human < Player
   end
 
   private
+
+  def set_name
+    clear_screen()
+    name = ''
+    loop do
+      prompt 'Please enter a name for your character:'
+      prompt '(Only letters and at least three chars)'
+      name = gets.chomp
+      break if name.match?(/^[a-z]{3,}$/i)
+      clear_screen()
+      puts "Oops, please enter a valid name"
+    end
+    self.name = name
+  end
 
   def choice_prompt
     loop do
@@ -191,6 +203,10 @@ class Human < Player
 end
 
 class Computer < Player
+  def set_name
+    self.name = ['Robo-Raptor', 'Galactron', 'Yes Man', 'Tik-Tok', 'Old B.O.B']
+  end
+
   def choose
     self.move = Move.new(VALID_CHOICE.sample)
   end
