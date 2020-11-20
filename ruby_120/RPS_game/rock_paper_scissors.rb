@@ -59,8 +59,6 @@ o
  (__\\\\
 MSG
 
-
-
 class RPSGame
   SCORE_TO_WIN = 5
   RULES_MESSAGE = <<-MSG
@@ -76,7 +74,7 @@ MSG
 
   def initialize
     @human    = Human.new
-    @computer = Computer.new
+    @computer = Robots::OldBob.new
   end
 
   def play
@@ -244,17 +242,20 @@ class Human < Player
 
   def set_name
     clear_screen()
-    name = ''
+    name = name_input_loop
+    self.name = name.capitalize
+  end
+
+  def name_input_loop
     loop do
       puts EARTH_ART, ''
       prompt 'Please enter a name for your space hero'
       prompt '(Only letters and at least three chars)'
       name = gets.chomp
-      break if name.match?(/^[a-z]{3,}$/i)
+      break name if name.match?(/^[a-z]{3,}$/i)
       clear_screen()
       puts "Oops, please enter a valid name"
     end
-    self.name = name.capitalize
   end
 
   def choice_prompt
@@ -279,42 +280,76 @@ class Human < Player
   end
 end
 
-class Computer < Player
-  def set_name
-    self.name =
-    ['Robo-Raptor', 'Galactron', 'Yes Man', 'Tik-Tok', 'Old B.O.B'].sample
+module Robots
+  class RoboRaptor < Player
+    def set_name
+      self.name = 'Robo-Raptor'
+    end
+
+    def choose(opponent_last_move)
+      self.move =
+        if ['rock', 'scissors'].include? opponent_last_move
+          Move.new('Spock')
+        else
+          Move.new('lizard')
+        end
+    end
   end
 
-  def choose(opponent_last_move)
-    case name
-    when 'Robo-Raptor'
-      if ['rock', 'scissors'].include? opponent_last_move
-        self.move = Move.new('Spock')
-      else
-        self.move = Move.new('lizard')
-      end
-    when 'Galactron'
+  class Galactron < Player
+    def set_name
+      self.name = 'Galactron'
+    end
+
+    def choose(_opponent_last_move)
       self.move = Move.new(VALID_CHOICE.sample)
-    when 'Yes Man'
+    end
+  end
+
+  class YesMan < Player
+    def set_name
+      self.name = 'Yes Man'
+    end
+
+    def choose(opponent_last_move)
       self.move = opponent_last_move || Move.new(VALID_CHOICE.sample)
-    when 'Tik-Tok'
-      if ['paper', 'lizard'].include? opponent_last_move
-        self.move = Move.new('scissors')
-      else
-        self.move = Move.new('Spock')
-      end
-    when 'Old B.O.B'
-      if ['paper', 'Spock'].include? opponent_last_move
-        self.move = Move.new('paper')
-      else
-        self.move = Move.new('rock')
-      end
+    end
+  end
+
+  class TikTok < Player
+    def set_name
+      self.name = 'Tik-Tok'
+    end
+
+    def choose(opponent_last_move)
+      self.move =
+        if ['paper', 'lizard'].include? opponent_last_move
+          Move.new('scissors')
+        else
+          Move.new('Spock')
+        end
+    end
+  end
+
+  class OldBob < Player
+    def set_name
+      self.name = 'Old B.O.B'
+    end
+
+    def choose(opponent_last_move)
+      self.move =
+        if ['paper', 'Spock'].include? opponent_last_move
+          Move.new('paper')
+        else
+          Move.new('rock')
+        end
     end
   end
 end
 
 class Move
-  WIN_MOVES = (Player::VALID_CHOICE).permutation(2).to_a.select do |(first, second)|
+  WIN_MOVES = (Player::VALID_CHOICE).permutation(2).to_a
+                                    .select do |(first, second)|
     case first
     when 'rock'     then ['scissors', 'lizard'].include?(second)
     when 'paper'    then ['rock', 'Spock'].include?(second)
