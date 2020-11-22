@@ -128,16 +128,9 @@ MSG
   def play_round
     computer.choose(human.last_move)
     human.choose
-    winner = to_winner(human.compare(computer))
+    winner = human.check_winner(computer)
     update_score(winner, human, computer)
     display_round_info(winner)
-  end
-
-  def to_winner(result)
-    case result
-    when 'won'  then 'human'
-    when 'lost' then 'computer'
-    when 'tie'  then 'tie' end
   end
 
   def update_score(winner, human, computer)
@@ -226,9 +219,9 @@ class Player
     @move_history[-1].clone.to_s.downcase
   end
 
-  def compare(other_player)
-    return 'won'  if move > other_player.move
-    return 'lost' if move < other_player.move
+  def check_winner(other_player)
+    return type              if move > other_player.move
+    return other_player.type if move < other_player.move
     'tie'
   end
 
@@ -239,6 +232,10 @@ class Player
   def reset_score
     self.score = 0
   end
+
+  protected
+
+  attr_reader :type
 
   private
 
@@ -252,6 +249,11 @@ end
 
 class Human < Player
   VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
+
+  def initialize
+    super
+    @type = 'human'
+  end
 
   def choose
     clear_screen()
@@ -300,8 +302,15 @@ class Human < Player
   end
 end
 
+class Computer < Player
+  def initialize
+    super
+    @type = 'computer'
+  end
+end
+
 module Robots
-  class RoboRaptor < Player
+  class RoboRaptor < Computer
     def set_name
       self.name = 'Robo-Raptor'
     end
@@ -316,7 +325,7 @@ module Robots
     end
   end
 
-  class Galactron < Player
+  class Galactron < Computer
     def set_name
       self.name = 'Galactron'
     end
@@ -326,7 +335,7 @@ module Robots
     end
   end
 
-  class YesMan < Player
+  class YesMan < Computer
     def set_name
       self.name = 'Yes Man'
     end
@@ -341,7 +350,7 @@ module Robots
     end
   end
 
-  class TikTok < Player
+  class TikTok < Computer
     def set_name
       self.name = 'Tik-Tok'
     end
@@ -356,7 +365,7 @@ module Robots
     end
   end
 
-  class OldBob < Player
+  class OldBob < Computer
     def set_name
       self.name = 'Old B.O.B'
     end
