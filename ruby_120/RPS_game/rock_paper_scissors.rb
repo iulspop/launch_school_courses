@@ -128,12 +128,18 @@ MSG
   def play_round
     computer.choose(human.last_move)
     human.choose
-    winner = human.check_winner(computer)
-    update_score(winner, human, computer)
+    winner = check_winner
+    update_score(winner)
     display_round_info(winner)
   end
 
-  def update_score(winner, human, computer)
+  def check_winner
+    return 'human'    if human.move > computer.move
+    return 'computer' if human.move < computer.move
+    'tie'
+  end
+
+  def update_score(winner)
     human.increment_score    if winner == 'human'
     computer.increment_score if winner == 'computer'
   end
@@ -219,12 +225,6 @@ class Player
     @move_history[-1].clone.to_s.downcase
   end
 
-  def check_winner(other_player)
-    return type              if move > other_player.move
-    return other_player.type if move < other_player.move
-    'tie'
-  end
-
   def increment_score
     self.score += 1
   end
@@ -232,10 +232,6 @@ class Player
   def reset_score
     self.score = 0
   end
-
-  protected
-
-  attr_reader :type
 
   private
 
@@ -249,11 +245,6 @@ end
 
 class Human < Player
   VALID_SHORTCUT = VALID_CHOICE.map(&:chr).zip(VALID_CHOICE).to_h
-
-  def initialize
-    super
-    @type = 'human'
-  end
 
   def choose
     clear_screen()
@@ -302,15 +293,8 @@ class Human < Player
   end
 end
 
-class Computer < Player
-  def initialize
-    super
-    @type = 'computer'
-  end
-end
-
 module Robots
-  class RoboRaptor < Computer
+  class RoboRaptor < Player
     def set_name
       self.name = 'Robo-Raptor'
     end
@@ -325,7 +309,7 @@ module Robots
     end
   end
 
-  class Galactron < Computer
+  class Galactron < Player
     def set_name
       self.name = 'Galactron'
     end
@@ -335,7 +319,7 @@ module Robots
     end
   end
 
-  class YesMan < Computer
+  class YesMan < Player
     def set_name
       self.name = 'Yes Man'
     end
@@ -350,7 +334,7 @@ module Robots
     end
   end
 
-  class TikTok < Computer
+  class TikTok < Player
     def set_name
       self.name = 'Tik-Tok'
     end
@@ -365,7 +349,7 @@ module Robots
     end
   end
 
-  class OldBob < Computer
+  class OldBob < Player
     def set_name
       self.name = 'Old B.O.B'
     end
