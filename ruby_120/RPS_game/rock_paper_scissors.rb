@@ -178,13 +178,14 @@ MSG
       puts "YOU LOST!!!\n" \
            "#{human.name}'s elements are deconstructed and " \
            "turned into paper clips\n" \
-           "The galaxy is doomed...\n"
+           "The galaxy is doomed..."
     end
   end
 
   def play_again?
     loop do
-      prompt 'Play again?'
+      puts ''
+      prompt 'Play again? (y or n)'
       answer = gets.chomp.downcase
       return true  if ['yes', 'y'].include?(answer)
       return false if ['no', 'n'].include?(answer)
