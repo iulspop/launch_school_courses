@@ -128,19 +128,26 @@ MSG
   def play_round
     computer.choose(human.last_move)
     human.choose
-    won_or_lost = human.compare(computer)
-    update_score(won_or_lost, human, computer)
-    display_round_info(won_or_lost)
+    winner = to_winner(human.compare(computer))
+    update_score(winner, human, computer)
+    display_round_info(winner)
   end
 
-  def update_score(won_or_lost, human, computer)
-    human.increment_score    if won_or_lost == 'won'
-    computer.increment_score if won_or_lost == 'lost'
+  def to_winner(result)
+    case result
+    when 'won'  then 'human'
+    when 'lost' then 'computer'
+    when 'tie'  then 'tie' end
   end
 
-  def display_round_info(won_or_lost)
+  def update_score(winner, human, computer)
+    human.increment_score    if winner == 'human'
+    computer.increment_score if winner == 'computer'
+  end
+
+  def display_round_info(winner)
     display_score(human, computer)
-    display_result(won_or_lost, human.move, computer.move)
+    display_result(winner, human.move, computer.move)
     display_choices(human, computer)
   end
 
@@ -157,12 +164,12 @@ MSG
     puts "#{computer.name} chose: #{computer.move}", ''
   end
 
-  def display_result(won_or_lost, player_move, computer_move)
-    case won_or_lost
-    when 'won'
+  def display_result(winner, player_move, computer_move)
+    case winner
+    when 'human'
       prompt(player_move.attack_description(computer_move))
       prompt 'You won this round.', ''
-    when 'lost'
+    when 'computer'
       prompt(computer_move.attack_description(player_move))
       prompt 'You lost this round.', ''
     when 'tie'
