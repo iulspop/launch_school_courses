@@ -1,5 +1,53 @@
 require 'io/console'
 
+X_MARK = <<-MSG
+              
+    .____,    
+   . \\  / ,   
+   |`-  -'|   
+   |,-  -.|   
+   ' /__\\ `   
+    '    `    
+              
+MSG
+
+O_MARK = <<-MSG
+              
+     ____     
+   ,' __ `.   
+  / ,'  `. \\  
+  | | () | |  
+  \\ `.__,' /  
+   `.____,'   
+              
+MSG
+
+EMPTY_SQUARE = <<-MSG
+              
+              
+              
+              
+              
+              
+              
+              
+MSG
+
+HORIZONTAL_LINE = <<-MSG
+\n______________|______________|_______________
+MSG
+
+VERTICAL_LINE = <<-MSG
+|
+|
+|
+|
+|
+|
+|
+|
+MSG
+
 def prompt(message, *extra)
   puts "==> #{message}", *extra
 end
@@ -58,19 +106,6 @@ class Square
   attr_writer :mark
 end
 
-sqr1 = Square.new
-sqr1.update_mark('X')
-
-sqr2 = Square.new
-sqr2.update_mark('X')
-
-sqr3 = Square.new
-sqr3.update_mark('X')
-
-line1 = Line.new(sqr1, sqr2, sqr3)
-p line1.squares
-p line1.full?
-
 class Board
   def initialize
     squares = []
@@ -79,7 +114,8 @@ class Board
   end
 
   def display
-    p lines[0].squares
+    clear_screen
+    puts to_ascii_board(lines[0..2]), ''
   end
 
   def winner?
@@ -124,11 +160,43 @@ class Board
     add_vertical_lines(squares)
     add_diagonal_lines(squares)
   end
-end
 
-board = Board.new
-p board.winner?
-p board.full?
+  def concat_vertical(string1, string2)
+    lines1 = string1.split("\n")
+    lines2 = string2.split("\n")
+    concat_lines = []
+  
+    lines1.each_with_index do |line, index|
+      concat_lines << line + lines2[index]
+    end
+  
+    concat_lines.join("\n")
+  end
+  
+  def concat_many_verticals(*strings)
+    strings.reduce { |concat, string| concat_vertical(concat, string) }
+  end
+  
+  def concat_row(first, middle, last)
+    concat_many_verticals(first, VERTICAL_LINE, middle, VERTICAL_LINE, last)
+  end
+  
+  def to_ascii_sqr(mark)
+    case mark
+    when 'X' then X_MARK
+    when 'O' then O_MARK
+    when ''  then EMPTY_SQUARE end
+  end
+  
+  def to_ascii_board(row_lines)
+    ascii_board = row_lines.map do |row|
+      row.squares.map { |square| to_ascii_sqr(square.mark) }
+    end
+    ascii_board.map do |row|
+      concat_row(row[0], row[1], row[2]) + HORIZONTAL_LINE
+    end
+  end
+end
 
 class Player
   attr_reader :mark, :initiative
@@ -215,9 +283,7 @@ class Game
     loop do
       board.display
 
-      board.mark_square(human.choose_square, human.mark) if human.initiative
-      board.mark_square(computer.choose_square, computer.mark) if computer.initiative
-
+      human.initiative ? play_move(human) : play_move(computer)
       pass_initiative
 
       break if board.winner? || board.full?
@@ -231,6 +297,10 @@ class Game
   def reset_player_marks
     human.pick_mark
     computer.pick_mark(human.mark)
+  end
+
+  def play_move(player)
+    board.mark_square(player.choose_square, player.mark)
   end
 
   def pass_initiative
