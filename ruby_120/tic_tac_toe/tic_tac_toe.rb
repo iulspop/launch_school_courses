@@ -293,7 +293,6 @@ class Player
 
   def initialize
     @score = 0
-    # create_name
   end
 
   def increment_score
