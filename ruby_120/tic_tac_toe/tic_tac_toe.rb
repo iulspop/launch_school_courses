@@ -143,10 +143,19 @@ class Board
     puts display
   end
 
-  def winner?
-    winner = nil
-    lines.any? { |line| winner = line.winner? }
-    winner
+  def winner?(human_mark, computer_mark)
+    winning_mark = find_winning_mark
+
+    case winning_mark
+    when human_mark    then 'human'
+    when computer_mark then 'computer'
+    when nil           then 'tie' end
+  end
+
+  def find_winning_mark
+    winning_mark = nil
+    lines.any? { |line| winning_mark = line.winner? }
+    winning_mark
   end
 
   def full?
@@ -267,7 +276,7 @@ class Board
 end
 
 class Player
-  attr_reader :mark, :initiative
+  attr_reader :mark, :initiative, :score
 
   def initialize
     @score = 0
@@ -330,15 +339,19 @@ class Computer < Player
 end
 
 class Game
+  WIN_SCORE = 3
+
   def initialize
     @human = Human.new
     @computer = Computer.new
   end
 
   def play_game
-    play_all_rounds
-    # display_game_winner(scores)
-    # break unless play_again?
+    loop do
+      play_all_rounds
+      display_game_winner
+      break unless play_again?
+    end
   end
 
   private
@@ -352,26 +365,15 @@ class Game
       reset_board
       reset_player_marks
 
-      play_round
+      round_winner = play_round
 
       board.display
-      # update_score
-      # display_score
+      update_score(round_winner)
+      display_score
 
-      # break if win_game?
-      # display_round_winner
-      # any_key_to_continue('Press any key to start next round...')
-    end
-  end
-
-  def play_round
-    loop do
-      board.display
-
-      human.initiative ? play_move(human) : play_move(computer)
-      pass_initiative
-
-      break if board.winner? || board.full?
+      break if win_game?
+      display_round_winner(round_winner)
+      any_key_to_continue('Press any key to start next round...')
     end
   end
 
@@ -384,6 +386,18 @@ class Game
     computer.pick_mark(human.mark)
   end
 
+  def play_round
+    loop do
+      board.display
+
+      human.initiative ? play_move(human) : play_move(computer)
+      pass_initiative
+
+      winner = board.winner?(human.mark, computer.mark)
+      break winner if winner != 'tie' || board.full?
+    end
+  end
+
   def play_move(player)
     board.mark_square(player.choose_square(board), player.mark)
   end
@@ -391,6 +405,50 @@ class Game
   def pass_initiative
     human.toggle_initiative
     computer.toggle_initiative
+  end
+
+  def update_score(round_winner)
+    human.increment_score    if round_winner == 'human'
+    computer.increment_score if round_winner == 'computer'
+  end
+
+  def display_score
+    puts '', '==== SCORE ===='
+    puts "Player: #{human.score}   " \
+         "Computer: #{computer.score}", ''
+  end
+
+  def win_game?
+    [human.score, computer.score].include?(WIN_SCORE)
+  end
+
+  def display_round_winner(round_winner)
+    case round_winner
+    when 'human'    then prompt 'You won this round!', ''
+    when 'computer' then prompt 'You lost this round!', ''
+    when 'tie'      then prompt 'This round is a tie.', '' end
+  end
+
+  def display_game_winner
+    case WIN_SCORE
+    when human.score    then prompt 'You won the game!', ''
+    when computer.score then prompt 'You lost the game!', '' end
+  end
+
+  def play_again?
+    loop do
+      prompt 'Play again?'
+      answer = gets.chomp.downcase
+      return true  if ['yes', 'y'].include?(answer)
+      return false if ['no', 'n'].include?(answer)
+      clear_screen
+      puts 'Oops. Please enter Yes or No.'
+    end
+  end
+
+  def display_goodbye_message
+    clear_screen
+    puts 'Thank you for playing. Good bye!'
   end
 end
 
