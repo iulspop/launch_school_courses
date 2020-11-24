@@ -172,13 +172,13 @@ class Board
   end
 
   def full?
-    lines[0..2].all? { |line| line.full? }
+    lines[0..2].all?(&:full?)
   end
 
   def mark_square(position, mark)
     row_index, column_index = position
     lines[row_index].squares[column_index].update_mark(mark)
-    moves.delete_if { |_, value| value == [row_index, column_index]}
+    moves.delete_if { |_, value| value == [row_index, column_index] }
   end
 
   def get_smart_move(player_mark)
@@ -219,29 +219,29 @@ class Board
     lines1 = string1.split("\n")
     lines2 = string2.split("\n")
     concat_lines = []
-  
+
     lines1.each_with_index do |line, index|
       concat_lines << line + lines2[index]
     end
-  
+
     concat_lines.join("\n")
   end
-  
+
   def concat_many_verticals(*strings)
     strings.reduce { |concat, string| concat_vertical(concat, string) }
   end
-  
+
   def concat_row(first, middle, last)
     concat_many_verticals(first, VERTICAL_LINE, middle, VERTICAL_LINE, last)
   end
-  
+
   def to_ascii_sqr(mark)
     case mark
     when 'X' then X_MARK
     when 'O' then O_MARK
     when ''  then EMPTY_SQUARE end
   end
-  
+
   def to_ascii_board(row_lines)
     ascii_board = row_lines.map do |row|
       row.squares.map { |square| to_ascii_sqr(square.mark) }
@@ -253,7 +253,7 @@ class Board
 
   def lines_with_opening(player_mark)
     lines.each_with_object([]) do |line, lines_with_opening|
-      row_as_string = line.squares.map { |sqr| sqr.mark }.join
+      row_as_string = line.squares.map(&:mark).join
       lines_with_opening << line if row_as_string.match?(/#{player_mark}{2}/)
     end
   end
@@ -311,7 +311,7 @@ end
 class Human < Player
   def pick_mark
     self.mark = ['X', 'O'].sample
-    self.initiative = mark == 'X' ? true : false
+    self.initiative = mark == 'X'
   end
 
   def choose_square(board)
@@ -345,9 +345,8 @@ class Computer < Player
 
   def pick_mark(human_mark)
     self.mark = human_mark == 'X' ? 'O' : 'X'
-    self.initiative = mark == 'X' ? true : false
+    self.initiative = mark == 'X'
   end
-
 end
 
 class Game
@@ -376,10 +375,10 @@ class Game
 
   def display_welcome_message
     clear_screen
-  
+
     puts 'Welcome to Tic Tac Toe game!', ''
     prompt RULES_MESSAGE, ''
-  
+
     any_key_to_continue('Press any key to start playing...')
   end
 
@@ -390,10 +389,7 @@ class Game
 
       round_winner = play_round
 
-      board.display
-      update_score(round_winner)
-      display_score
-
+      display_round_info(round_winner)
       break if win_game?
       display_round_winner(round_winner)
       any_key_to_continue('Press any key to start next round...')
@@ -413,12 +409,16 @@ class Game
     loop do
       board.display
 
-      human.initiative ? play_move(human) : play_move(computer)
-      pass_initiative
+      play_turn
 
       winner = board.winner?(human.mark, computer.mark)
       break winner if winner != 'tie' || board.full?
     end
+  end
+
+  def play_turn
+    human.initiative ? play_move(human) : play_move(computer)
+    pass_initiative
   end
 
   def play_move(player)
@@ -439,6 +439,12 @@ class Game
     puts '', '==== SCORE ===='
     puts "Player: #{human.score}   " \
          "Computer: #{computer.score}", ''
+  end
+
+  def display_round_info(round_winner)
+    board.display
+    update_score(round_winner)
+    display_score
   end
 
   def win_game?
