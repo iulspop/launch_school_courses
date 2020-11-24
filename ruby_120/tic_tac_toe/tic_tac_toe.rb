@@ -1,61 +1,27 @@
-=begin
-two players each take a turn marking their sign (X or O) on sq
-ares in a 3 by 3 board.
-First to mark their signs on a full row wins.
-if board full end game.
+require 'io/console'
 
-nouns
-game, player, board, square, line
-human, computer
+def prompt(message, *extra)
+  puts "==> #{message}", *extra
+end
 
-verbs
-mark_square, check_if_a_player_won, board_full
+def clear_screen
+  system('clear') || system('clr')
+end
 
-game
-  has two players
-  has a board
-
-player
-  @sign
-  @score
-  increment_score
-
-  human
-    mark_square
-
-  computer
-    mark_square
-
-board
-  has 8 lines
-    use 3 horizontal lines
-  check if full
-  check if a player won
-  display
-  display moves
-
-line
-  references 3 squares
-  do all three squares have the same sign?
-  do all three squares have a sign?
-
-square
-  @value
-  update
-
-=end
+def any_key_to_continue(message = 'Press any key to continue...')
+  prompt message
+  STDIN.getch
+end
 
 class Line
-  def initialize(sqr1, sqr2, sqr3)
-    @line = [sqr1, sqr2, sqr3]
-  end
+  attr_reader :squares
 
-  def line
-    @line.dup.map(&:dup)
+  def initialize(sqr1, sqr2, sqr3)
+    @squares = [sqr1, sqr2, sqr3]
   end
 
   def full?
-    line.all? { |sqr| sqr.sign != '' }
+    squares.all? { |sqr| sqr.mark != '' }
   end
 
   def winner?
@@ -67,49 +33,53 @@ class Line
   private
 
   def all?(string)
-    line.all? { |sqr| sqr.sign == string }
+    squares.all? { |sqr| sqr.mark == string }
   end
 end
 
 class Square
   def initialize
-    @sign = ''
+    @mark = ''
   end
 
-  def update_sign(sign)
-    if sign != 'X' && sign != 'O'
-      raise 'Error invalid sign value, please use "X" or "O" strings'
+  def update_mark(mark)
+    if mark != 'X' && mark != 'O'
+      raise 'Error invalid mark value, please use "X" or "O" strings'
     end
-    self.sign = sign
+    self.mark = mark
   end
 
-  def sign
-    @sign.clone
+  def mark
+    @mark.clone
   end
 
   private
 
-  attr_writer :sign
+  attr_writer :mark
 end
 
 sqr1 = Square.new
-sqr1.update_sign('X')
+sqr1.update_mark('X')
 
 sqr2 = Square.new
-sqr2.update_sign('X')
+sqr2.update_mark('X')
 
 sqr3 = Square.new
-sqr3.update_sign('X')
+sqr3.update_mark('X')
 
 line1 = Line.new(sqr1, sqr2, sqr3)
-p line1.line
+p line1.squares
 p line1.full?
 
 class Board
   def initialize
     squares = []
     9.times { squares << Square.new }
-    @lines = create_lines(squares)
+    create_lines(squares)
+  end
+
+  def display
+    p lines[0].squares
   end
 
   def winner?
@@ -122,35 +92,37 @@ class Board
     lines[0..2].all? { |line| line.full? }
   end
 
+  def mark_square(position, mark)
+    vertical_index, horizontal_index = position
+    lines[vertical_index].squares[horizontal_index].update_mark(mark)
+  end
+
   private
 
-  def add_horizontal_lines(lines, squares)
+  attr_reader :lines
+
+  def add_horizontal_lines(squares)
     lines << Line.new(squares[0], squares[1], squares[2])
     lines << Line.new(squares[3], squares[4], squares[5])
     lines << Line.new(squares[6], squares[7], squares[8])
   end
 
-  def add_vertical_lines(lines, squares)
+  def add_vertical_lines(squares)
     lines << Line.new(squares[0], squares[3], squares[6])
     lines << Line.new(squares[1], squares[4], squares[7])
     lines << Line.new(squares[2], squares[5], squares[8])
   end
 
-  def add_diagonal_lines(lines, squares)
+  def add_diagonal_lines(squares)
     lines << Line.new(squares[0], squares[4], squares[8])
     lines << Line.new(squares[2], squares[4], squares[6])
   end
 
   def create_lines(squares)
-    lines = []
-    add_horizontal_lines(lines, squares)
-    add_vertical_lines(lines, squares)
-    add_diagonal_lines(lines, squares)
-    lines
-  end
-
-  def lines
-    @lines.dup.map(&:dup)
+    @lines = []
+    add_horizontal_lines(squares)
+    add_vertical_lines(squares)
+    add_diagonal_lines(squares)
   end
 end
 
@@ -158,54 +130,113 @@ board = Board.new
 p board.winner?
 p board.full?
 
-=begin
-class Game
+class Player
+  attr_reader :mark, :initiative
+
   def initialize
-    @human =
-    @computer =
-    @board =
+    @score = 0
+    # create_name
   end
 
-  def play
-    play_all_rounds
-    display_game_winner(scores)
-    break unless play_again?
+  def increment_score
+    self.score += 1
+  end
+
+  def toggle_initiative
+    self.initiative = !initiative
   end
 
   private
 
+  attr_writer :score, :mark, :initiative
+end
+
+class Human < Player
+  def choose_square
+    any_key_to_continue
+    [0, 1]
+  end
+
+  def pick_mark
+    self.mark = ['X', 'O'].sample
+    self.initiative = mark == 'X' ? true : false
+  end
+
+end
+
+class Computer < Player
+  def choose_square
+    any_key_to_continue
+    [0, 0]
+  end
+
+  def pick_mark(human_mark)
+    self.mark = human_mark == 'X' ? 'O' : 'X'
+    self.initiative = mark == 'X' ? true : false
+  end
+end
+
+class Game
+  def initialize
+    @human = Human.new
+    @computer = Computer.new
+  end
+
+  def play_game
+    play_all_rounds
+    # display_game_winner(scores)
+    # break unless play_again?
+  end
+
+  private
+
+  attr_accessor :board
+
+  attr_reader :human, :computer
+
   def play_all_rounds
     loop do
       reset_board
-      reset_player_signs
+      reset_player_marks
 
       play_round
 
-      display_board
-      update_score
-      display_score
+      board.display
+      # update_score
+      # display_score
 
-      break if win_game?
-      display_round_winner
-      any_key_to_continue('Press any key to start next round...')
+      # break if win_game?
+      # display_round_winner
+      # any_key_to_continue('Press any key to start next round...')
     end
   end
 
   def play_round
     loop do
-      display_board
+      board.display
 
-      human.mark_square    if human.initiative
-      computer.mark_square if computer.initiative
+      board.mark_square(human.choose_square, human.mark) if human.initiative
+      board.mark_square(computer.choose_square, computer.mark) if computer.initiative
 
       pass_initiative
 
-      break if board.is_winner? || board.is_full?
+      break if board.winner? || board.full?
     end
+  end
+
+  def reset_board
+    self.board = Board.new
+  end
+
+  def reset_player_marks
+    human.pick_mark
+    computer.pick_mark(human.mark)
+  end
+
+  def pass_initiative
+    human.toggle_initiative
+    computer.toggle_initiative
   end
 end
 
-class Player
-
-end
-=end
+Game.new.play_game
