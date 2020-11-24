@@ -134,6 +134,15 @@ class Board
     puts to_ascii_board(lines[0..2]), ''
   end
 
+  def display_moves
+    display = ''
+    VALID_MOVES.keys.each_with_index do |move, index|
+      display << (moves.include?(move) ? move + ' ' : '  ')
+      display << "\n" if (index + 1) % 3 == 0
+    end
+    puts display
+  end
+
   def winner?
     winner = nil
     lines.any? { |line| winner = line.winner? }
@@ -279,16 +288,31 @@ class Player
 end
 
 class Human < Player
-  def choose_square(board)
-    any_key_to_continue
-    [0, 1]
-  end
-
   def pick_mark
     self.mark = ['X', 'O'].sample
     self.initiative = mark == 'X' ? true : false
   end
 
+  def choose_square(board)
+    player_move = prompt_to_choose(board)
+    Board::VALID_MOVES[player_move]
+  end
+
+  private
+
+  def prompt_to_choose(board)
+    player_move = ''
+    prompt 'It your turn to mark a space.', ''
+    loop do
+      prompt 'To mark a square, select one of the following:'
+      board.display_moves
+      player_move = gets.chomp.downcase
+
+      break if board.moves.include?(player_move)
+      puts 'Oops, invalid move.'
+    end
+    player_move
+  end
 end
 
 class Computer < Player
