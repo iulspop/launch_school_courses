@@ -48,6 +48,19 @@ VERTICAL_LINE = <<-MSG
 |
 MSG
 
+RULES_MESSAGE = <<-MSG
+The rules are: 
+    Two players, X and O, take turns marking the spaces in a 3×3 grid.
+
+    The player who succeeds in placing three of their marks
+    in a horizontal, vertical, or diagonal row wins the round.
+
+    !!!IMPORTANT NOTE!!!
+    THE COMPUTER IS SMART BUT YOU CAN WIN!
+
+    The first to win three rounds wins the game!
+MSG
+
 def prompt(message, *extra)
   puts "==> #{message}", *extra
 end
@@ -347,11 +360,13 @@ class Game
   end
 
   def play_game
+    display_welcome_message
     loop do
       play_all_rounds
       display_game_winner
       break unless play_again?
     end
+    display_goodbye_message
   end
 
   private
@@ -359,6 +374,15 @@ class Game
   attr_accessor :board
 
   attr_reader :human, :computer
+
+  def display_welcome_message
+    clear_screen
+  
+    puts 'Welcome to Tic Tac Toe game!', ''
+    prompt RULES_MESSAGE, ''
+  
+    any_key_to_continue('Press any key to start playing...')
+  end
 
   def play_all_rounds
     loop do
