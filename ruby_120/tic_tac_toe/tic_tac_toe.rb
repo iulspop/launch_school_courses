@@ -107,10 +107,26 @@ class Square
 end
 
 class Board
+  VALID_MOVES = {
+    'q' => [0, 0],
+    'w' => [0, 1],
+    'e' => [0, 2],
+    'a' => [1, 0],
+    's' => [1, 1],
+    'd' => [1, 2],
+    'z' => [2, 0],
+    'x' => [2, 1],
+    'c' => [2, 2]
+  }
+
+  attr_reader :moves
+
   def initialize
     squares = []
     9.times { squares << Square.new }
     create_lines(squares)
+
+    @moves = VALID_MOVES.clone
   end
 
   def display
@@ -129,8 +145,15 @@ class Board
   end
 
   def mark_square(position, mark)
-    vertical_index, horizontal_index = position
-    lines[vertical_index].squares[horizontal_index].update_mark(mark)
+    row_index, column_index = position
+    lines[row_index].squares[column_index].update_mark(mark)
+    moves.delete_if { |_, value| value == [row_index, column_index]}
+  end
+
+  def get_smart_move(player_mark)
+    offence = get_opening(player_mark)
+    defence = get_opening(player_mark == 'X' ? 'O' : 'X')
+    offence || defence || moves.values.sample
   end
 
   private
@@ -196,6 +219,42 @@ class Board
       concat_row(row[0], row[1], row[2]) + HORIZONTAL_LINE
     end
   end
+
+  def lines_with_opening(player_mark)
+    lines.each_with_object([]) do |line, lines_with_opening|
+      row_as_string = line.squares.map { |sqr| sqr.mark }.join
+      lines_with_opening << line if row_as_string.match?(/#{player_mark}{2}/)
+    end
+  end
+
+  def squares_with_opening(lines_with_opening)
+    openings = []
+    lines_with_opening.each do |line|
+      line.squares.each do |square|
+        openings << square if square.mark == ''
+      end
+    end
+    openings
+  end
+
+  def square_to_move(square)
+    lines[0..2].each_with_index do |line, row_index|
+      line.squares.each_with_index do |other_square, column_index|
+        return [row_index, column_index] if square == other_square
+      end
+    end
+  end
+
+  def squares_to_moves(squares)
+    squares.map do |square|
+      square_to_move(square)
+    end
+  end
+
+  def get_opening(player_mark)
+    squares = squares_with_opening(lines_with_opening(player_mark))
+    squares.empty? ? nil : squares_to_moves(squares).sample
+  end
 end
 
 class Player
@@ -220,7 +279,7 @@ class Player
 end
 
 class Human < Player
-  def choose_square
+  def choose_square(board)
     any_key_to_continue
     [0, 1]
   end
@@ -233,15 +292,17 @@ class Human < Player
 end
 
 class Computer < Player
-  def choose_square
-    any_key_to_continue
-    [0, 0]
+  def choose_square(board)
+    prompt 'It\'s the computers turn.', ''
+    any_key_to_continue 'Press any key for computer mark square...'
+    board.get_smart_move(mark)
   end
 
   def pick_mark(human_mark)
     self.mark = human_mark == 'X' ? 'O' : 'X'
     self.initiative = mark == 'X' ? true : false
   end
+
 end
 
 class Game
@@ -300,7 +361,7 @@ class Game
   end
 
   def play_move(player)
-    board.mark_square(player.choose_square, player.mark)
+    board.mark_square(player.choose_square(board), player.mark)
   end
 
   def pass_initiative
