@@ -1,7 +1,7 @@
 require 'io/console'
 
-module ASCII_ART
-X_MARK = <<-MSG
+module AsciiArt
+  X_MARK = <<-MSG
               
     .____,    
    . \\  / ,   
@@ -12,7 +12,7 @@ X_MARK = <<-MSG
               
 MSG
 
-O_MARK = <<-MSG
+  O_MARK = <<-MSG
               
      ____     
    ,' __ `.   
@@ -23,7 +23,7 @@ O_MARK = <<-MSG
               
 MSG
 
-EMPTY_SQUARE = <<-MSG
+  EMPTY_SQUARE = <<-MSG
               
               
               
@@ -34,11 +34,11 @@ EMPTY_SQUARE = <<-MSG
               
 MSG
 
-HORIZONTAL_LINE = <<-MSG
+  HORIZONTAL_LINE = <<-MSG
 \n______________|______________|_______________
 MSG
 
-VERTICAL_LINE = <<-MSG
+  VERTICAL_LINE = <<-MSG
 |
 |
 |
@@ -50,7 +50,7 @@ VERTICAL_LINE = <<-MSG
 MSG
 end
 
-module MESSAGES
+module Messages
   RULES = <<-MSG
 The rules are: 
     Two players, X and O, take turns marking the spaces in a 3×3 grid.
@@ -124,7 +124,7 @@ class Square
 end
 
 class Board
-  include ASCII_ART
+  include AsciiArt
 
   VALID_MOVES = {
     'q' => [0, 0],
@@ -356,7 +356,7 @@ class Computer < Player
 end
 
 class Game
-  include MESSAGES
+  include Messages
   WIN_SCORE = 3
 
   def initialize
