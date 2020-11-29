@@ -1,5 +1,6 @@
 require 'io/console'
 
+module ASCII_ART
 X_MARK = <<-MSG
               
     .____,    
@@ -47,8 +48,10 @@ VERTICAL_LINE = <<-MSG
 |
 |
 MSG
+end
 
-RULES_MESSAGE = <<-MSG
+module MESSAGES
+  RULES = <<-MSG
 The rules are: 
     Two players, X and O, take turns marking the spaces in a 3×3 grid.
 
@@ -59,7 +62,8 @@ The rules are:
     THE COMPUTER IS SMART BUT YOU CAN WIN!
 
     The first to win three rounds wins the game!
-MSG
+  MSG
+end
 
 def prompt(message, *extra)
   puts "==> #{message}", *extra
@@ -120,6 +124,8 @@ class Square
 end
 
 class Board
+  include ASCII_ART
+
   VALID_MOVES = {
     'q' => [0, 0],
     'w' => [0, 1],
@@ -350,6 +356,7 @@ class Computer < Player
 end
 
 class Game
+  include MESSAGES
   WIN_SCORE = 3
 
   def initialize
@@ -377,7 +384,7 @@ class Game
     clear_screen
 
     puts 'Welcome to Tic Tac Toe game!', ''
-    prompt RULES_MESSAGE, ''
+    prompt RULES, ''
 
     any_key_to_continue('Press any key to start playing...')
   end
