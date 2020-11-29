@@ -150,7 +150,7 @@ class Board
 
   def display
     clear_screen
-    puts to_ascii_board(lines[0..2]), ''
+    puts to_ascii_board(lines[:horizontal]), ''
   end
 
   def display_moves
@@ -173,17 +173,17 @@ class Board
 
   def find_winning_mark
     winning_mark = nil
-    lines.any? { |line| winning_mark = line.winner? }
+    lines.values.flatten.any? { |line| winning_mark = line.winner? }
     winning_mark
   end
 
   def full?
-    lines[0..2].all?(&:full?)
+    lines[:horizontal].all?(&:full?)
   end
 
   def mark_square(position, mark)
     row_index, column_index = position
-    lines[row_index].squares[column_index].update_mark(mark)
+    lines[:horizontal][row_index].squares[column_index].update_mark(mark)
     moves.delete_if { |_, value| value == [row_index, column_index] }
   end
 
@@ -198,24 +198,27 @@ class Board
   attr_reader :lines
 
   def add_horizontal_lines(squares)
-    lines << Line.new(squares[0], squares[1], squares[2])
-    lines << Line.new(squares[3], squares[4], squares[5])
-    lines << Line.new(squares[6], squares[7], squares[8])
+    lines[:horizontal] =
+      [Line.new(squares[0], squares[1], squares[2]),
+       Line.new(squares[3], squares[4], squares[5]),
+       Line.new(squares[6], squares[7], squares[8])]
   end
 
   def add_vertical_lines(squares)
-    lines << Line.new(squares[0], squares[3], squares[6])
-    lines << Line.new(squares[1], squares[4], squares[7])
-    lines << Line.new(squares[2], squares[5], squares[8])
+    lines[:vertical] =
+      [Line.new(squares[0], squares[3], squares[6]),
+       Line.new(squares[1], squares[4], squares[7]),
+       Line.new(squares[2], squares[5], squares[8])]
   end
 
   def add_diagonal_lines(squares)
-    lines << Line.new(squares[0], squares[4], squares[8])
-    lines << Line.new(squares[2], squares[4], squares[6])
+    lines[:diagonal] =
+      [Line.new(squares[0], squares[4], squares[8]),
+       Line.new(squares[2], squares[4], squares[6])]
   end
 
   def create_lines(squares)
-    @lines = []
+    @lines = {}
     add_horizontal_lines(squares)
     add_vertical_lines(squares)
     add_diagonal_lines(squares)
@@ -258,7 +261,7 @@ class Board
   end
 
   def lines_with_opening(player_mark)
-    lines.each_with_object([]) do |line, lines_with_opening|
+    lines.values.flatten.each_with_object([]) do |line, lines_with_opening|
       row_as_string = line.squares.map(&:mark).join
       lines_with_opening << line if row_as_string.match?(/#{player_mark}{2}/)
     end
@@ -275,7 +278,7 @@ class Board
   end
 
   def square_to_move(square)
-    lines[0..2].each_with_index do |line, row_index|
+    lines[:horizontal].each_with_index do |line, row_index|
       line.squares.each_with_index do |other_square, column_index|
         return [row_index, column_index] if square == other_square
       end
