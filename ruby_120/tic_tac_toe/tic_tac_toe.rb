@@ -501,7 +501,7 @@ class Game
 
   def play_again?
     loop do
-      prompt 'Play again?'
+      prompt 'Play again? (y/n)'
       answer = gets.chomp.downcase
       return true  if ['yes', 'y'].include?(answer)
       return false if ['no', 'n'].include?(answer)
