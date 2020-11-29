@@ -126,7 +126,7 @@ end
 class Board
   include AsciiArt
 
-  VALID_MOVES = {
+  MOVES_QWERTY = {
     'q' => [0, 0],
     'w' => [0, 1],
     'e' => [0, 2],
@@ -138,14 +138,27 @@ class Board
     'c' => [2, 2]
   }
 
-  attr_reader :moves
+  MOVES_NUMPAD = {
+    '1' => [0, 0],
+    '2' => [0, 1],
+    '3' => [0, 2],
+    '4' => [1, 0],
+    '5' => [1, 1],
+    '6' => [1, 2],
+    '7' => [2, 0],
+    '8' => [2, 1],
+    '9' => [2, 2]
+  }
 
-  def initialize
+  attr_reader :moves, :reference_moves
+
+  def initialize(shortcut_type)
     squares = []
     9.times { squares << Square.new }
     create_lines(squares)
 
-    @moves = VALID_MOVES.clone
+    @moves = shortcut_type == 'qwerty' ? MOVES_QWERTY.dup : MOVES_NUMPAD.dup
+    @reference_moves = moves.dup
   end
 
   def display
@@ -155,7 +168,7 @@ class Board
 
   def display_moves
     display = ''
-    VALID_MOVES.keys.each_with_index do |move, index|
+    reference_moves.keys.each_with_index do |move, index|
       display << (moves.include?(move) ? move + ' ' : '  ')
       display << "\n" if (index + 1) % 3 == 0
     end
@@ -325,7 +338,7 @@ class Human < Player
 
   def choose_square(board)
     player_move = prompt_to_choose(board)
-    Board::VALID_MOVES[player_move]
+    board.reference_moves[player_move]
   end
 
   private
@@ -369,6 +382,7 @@ class Game
 
   def play_game
     display_welcome_message
+    prompt_choose_shortcut
     loop do
       play_all_rounds
       display_game_winner
@@ -379,7 +393,7 @@ class Game
 
   private
 
-  attr_accessor :board
+  attr_accessor :board, :shortcut_type
 
   attr_reader :human, :computer
 
@@ -390,6 +404,17 @@ class Game
     prompt RULES, ''
 
     any_key_to_continue('Press any key to start playing...')
+  end
+
+  def prompt_choose_shortcut
+    loop do
+      prompt 'Would you like QWERTY shortcuts or numpad shortcuts? (q or n)'
+      answer = gets.chomp.downcase
+      break self.shortcut_type = 'qwerty' if ['q'].include?(answer)
+      break self.shortcut_type = 'numpad' if ['n'].include?(answer)
+      clear_screen
+      puts 'Oops. Please enter "q" or "n".'
+    end
   end
 
   def play_all_rounds
@@ -407,7 +432,7 @@ class Game
   end
 
   def reset_board
-    self.board = Board.new
+    self.board = Board.new(shortcut_type)
   end
 
   def reset_player_marks
