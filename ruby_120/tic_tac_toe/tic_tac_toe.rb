@@ -276,10 +276,14 @@ class Board
     end
   end
 
-  def ascii_board
+  def concat_ascii_board
     to_ascii_board.map do |row|
       concat_row(row[0], row[1], row[2]) + HORIZONTAL_LINE
     end
+  end
+
+  def ascii_board
+    concat_ascii_board
   end
 
   def lines_with_opening(player_mark)
