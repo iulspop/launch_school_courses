@@ -72,7 +72,7 @@ The rules are:
     end
 
     def clear_screen
-      # system('clear') || system('clr')
+      system('clear') || system('clr')
     end
 
     def any_key_to_continue(message = 'Press any key to continue...')
@@ -449,8 +449,6 @@ The rules are:
         reset_player_marks
 
         round_winner = play_round
-        p 'hello!!!'
-        p round_winner
 
         display_round_info(round_winner)
         break if win_game?
