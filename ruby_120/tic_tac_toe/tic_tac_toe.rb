@@ -163,7 +163,7 @@ class Board
 
   def display
     clear_screen
-    puts to_ascii_board(lines[:horizontal]), ''
+    puts ascii_board, ''
   end
 
   def display_moves
@@ -270,11 +270,14 @@ class Board
     when ''  then EMPTY_SQUARE end
   end
 
-  def to_ascii_board(row_lines)
-    ascii_board = row_lines.map do |row|
-      row.squares.map { |square| to_ascii_sqr(square.mark) }
+  def to_ascii_board
+    lines[:horizontal].map do |line|
+      line.squares.map { |square| to_ascii_sqr(square.mark) }
     end
-    ascii_board.map do |row|
+  end
+
+  def ascii_board
+    to_ascii_board.map do |row|
       concat_row(row[0], row[1], row[2]) + HORIZONTAL_LINE
     end
   end
