@@ -181,13 +181,11 @@ class Board
     case winning_mark
     when human_mark    then 'human'
     when computer_mark then 'computer'
-    when nil           then 'tie' end
+    when false         then 'tie' end
   end
 
   def find_winning_mark
-    winning_mark = nil
-    all_lines.any? { |line| winning_mark = line.winner? }
-    winning_mark
+    all_lines.any? { |line| line.winner? }
   end
 
   def full?
