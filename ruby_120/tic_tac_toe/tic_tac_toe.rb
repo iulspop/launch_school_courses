@@ -95,6 +95,10 @@ class Line
     nil
   end
 
+  def []=(index, mark)
+    squares[index].update_mark(mark)
+  end
+
   private
 
   def all?(string)
@@ -194,7 +198,7 @@ class Board
 
   def mark_square(position, mark)
     row_index, column_index = position
-    lines[:horizontal][row_index].squares[column_index].update_mark(mark)
+    lines[:horizontal][row_index][column_index] = mark
   end
 
   def delete_used_move(position)
