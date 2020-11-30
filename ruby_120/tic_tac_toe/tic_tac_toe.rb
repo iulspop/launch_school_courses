@@ -195,6 +195,10 @@ class Board
   def mark_square(position, mark)
     row_index, column_index = position
     lines[:horizontal][row_index].squares[column_index].update_mark(mark)
+  end
+
+  def delete_used_move(position)
+    row_index, column_index = position
     moves.delete_if { |_, value| value == [row_index, column_index] }
   end
 
@@ -459,7 +463,9 @@ class Game
   end
 
   def play_move(player)
-    board.mark_square(player.choose_square(board), player.mark)
+    position = player.choose_square(board)
+    board.mark_square(position, player.mark)
+    board.delete_used_move(position)
   end
 
   def pass_initiative
