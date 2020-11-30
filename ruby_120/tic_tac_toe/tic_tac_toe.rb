@@ -186,7 +186,7 @@ class Board
 
   def find_winning_mark
     winning_mark = nil
-    lines.values.flatten.any? { |line| winning_mark = line.winner? }
+    all_lines.any? { |line| winning_mark = line.winner? }
     winning_mark
   end
 
@@ -237,6 +237,10 @@ class Board
     add_diagonal_lines(squares)
   end
 
+  def all_lines
+    lines.values.flatten
+  end
+
   def concat_vertical(string1, string2)
     lines1 = string1.split("\n")
     lines2 = string2.split("\n")
@@ -274,7 +278,7 @@ class Board
   end
 
   def lines_with_opening(player_mark)
-    lines.values.flatten.each_with_object([]) do |line, lines_with_opening|
+    all_lines.each_with_object([]) do |line, lines_with_opening|
       row_as_string = line.squares.map(&:mark).join
       lines_with_opening << line if row_as_string.match?(/#{player_mark}{2}/)
     end
