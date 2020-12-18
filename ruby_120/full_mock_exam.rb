@@ -11,7 +11,7 @@
 
 6. What is polymorphism? Show how it's applied with clas inheritence.
 
-7. What is the method lookup path? Show how it works in Ruby.
+7. What is the method lookup path? How is it important? Show how it works in Ruby.
 
 8. What is the method access control? Show how it works in Ruby.
 
