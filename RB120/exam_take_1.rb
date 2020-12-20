@@ -191,6 +191,22 @@ puts car1 == car2 # => false
 ```
 
 9. What is the `super` keyword in Ruby? Show how it works.
+The `super` keyword is used inside instance methods or class methods to call the next method up the lookup chain with the same name.
+
+```ruby
+class Animal
+  def speak(sound)
+    puts "#{class} says #{sound}"
+  end
+end
+
+class Dog < Animal
+  def speak(sound)
+    
+  end
+end
+
+```
 
 10. What are fake operators in Ruby? Explain how they work.
 
