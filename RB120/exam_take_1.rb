@@ -193,26 +193,141 @@ puts car1 == car2 # => false
 9. What is the `super` keyword in Ruby? Show how it works.
 The `super` keyword is used inside instance methods or class methods to call the next method up the lookup chain with the same name.
 
+I show the use of the `super` keyword below.
 ```ruby
-class Animal
-  def speak(sound)
-    puts "#{class} says #{sound}"
+class Player
+  def initialize(strength, intelligence)
+    @strength = strength
+    @intelligence = intelligence
   end
 end
 
-class Dog < Animal
-  def speak(sound)
-    
+class Human < Player
+  def initialize
+    super(6, 6)
   end
 end
 
+class Orc < Player
+  def initialize
+    super(8, 3)
+  end
+end
+```
+
+The `super` keyword is used in the `Human` and `Orc` classes' `initialize method` to call same method one step up the method lookup chain. That is the same as calling the next method up the inheritence hierarchy. In this case that is the `initialize` instance method on the `Player` class.
+
+The `super` keyword implicitly takes all method parameters as arguments when called without parentheses.
+
+The following example illustrates that:
+```ruby
+class OneThing
+  def foo(x, y); end
+end
+
+class TwoThing < OneThing
+  def foo(x, y, z)
+    super
+  end
+end
+
+TwoThing.new.foo(1, 2, 3) # => ArgumentError
+```
+
+The code raises a `ArgumentError` when executed, because the `super` method on line 8 calls the `foo` instance method of the `OneThing` class with 3 arguments, since the three parameters of the `foo` method on `TwoThing` were passed implicitly.
+
+To fix that, we can add parentheses to the `super` keyword to explicitly pass in the arguments we want, in the order we want.
+
+```ruby
+  def foo(x, y, z)
+    super()     # calls next method up with no arguments
+    super(x, y) # with two arguments
+    super(y, x) # or changed order
+  end
 ```
 
 10. What are fake operators in Ruby? Explain how they work.
+Fake operators are methods that can be used with operator-like syntax in Ruby.
+
+For example, we can define an instance method called `+` on a custom class:
+```ruby
+class Container
+  attr_reader :size
+
+  def initialize(size)
+    @size = size
+  end
+
+  def +(other)
+    Container.new(size + other.size)
+  end
+end
+
+a = Container.new(50)
+b = Container.new(50)
+c = a + b
+puts c.size # => 100
+```
+
+The `+` instance method is not a operator in the sense that it is not a construct built in to the language. It looks like one syntactically, but in reality it is an instance method of a particular class. This affords users of Ruby a lot of flexibily, since fake operators can defined and overwritten on any class to provide an intuitive interface for certain operations.
 
 11. What are getters and setters? Show the different ways to create them.
+By default, the data that the instance variables of an object reference is not accessible from outside that object.
+
+For example, when I create an instance of this class, there's no way for a user of that object to access the data referenced by `@name`:
+```ruby
+class Player
+  def initalize
+    @name = 'Long Pants'
+  end
+end
+
+a_player = Player.new
+a_player.name # => NoMethodError
+```
+
+`@name` is scoped to the object referenced by `a_player`. That state is encapsulated within the object and protected from outside access.
+
+Getters and setters are methods used to expose an interface to "get" or read that data and "set" or write to that data.
+
+```ruby
+class Player
+  def initalize
+    @name = 'Long Pants'
+  end
+end
+
+a_player = Player.new
+a_player.name # => NoMethodError
+```
 
 12. What is the `self` keyword in Ruby? Show how it works.
+The `self` keyword is a reference to an object. The object it references is either a class or an instance of a class. Which it references depends on where it is used in the source code, also known as the lexical context.
+
+The following example explains the rules that determine what `self` references:
+```ruby
+class Foo
+  # used here in the class definition it references the class `Foo`
+  foo_inception = self
+
+  # self after the `def` keyword also references the class `Foo`. This defines a singleton method on the class `Foo` (a class method).
+  def self.a_class_method
+    # used inside a class method, it references the class `Foo`
+  end
+
+  def an_instance_method
+    # used inside an instance method it references the instance of `Foo` that calls this method
+  end
+end
+
+# What is `self` in the top level scope?
+puts self # => main
+puts self.class # => Object
+# `self` references `main` an instance of the `Object` class
+```
+However, there's a twist to it. Ruby also uses `self` implicitly to determine what object a method with no explicit called is called on.
+
+The `self` keyword can also been seen as a method that returns an object or another based on where it is called.
 
 13. What are collaborator objects? When can it be helpful to use them? Show how they're used.
 
