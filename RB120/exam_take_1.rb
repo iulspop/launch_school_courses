@@ -391,29 +391,91 @@ Even though no instance method is defined on the class `Animal`, the instance me
 
 So, modules are Ruby's approach to letting user add functionality from multiple sources to classes. Including modules is similar to the multiple inheritence of other languages, but it by-passes the name-collision problems of multiple inheritence.
 
+Another use for modules are as namespaces. Namespaces create a new scope that can be accessed behind a constant. The result is you can be confident that what's contained in the namespace doesn't interfere with other similarly named stuff in outside that namespace.
 
+```ruby
+module Stuff
+  def self.puts
+    'hey hey'
+  end
+
+  class Orange
+    def initialize
+      puts 'an orange'
+    end
+  end
+
+  module MoreStuff
+    A_CONSTANT = 7
+  end
+end
+
+puts Stuff.puts # => 'hey hey'
+# The methods defined on the module don't interfere with those defined elsewhere, like Kernel#puts
+
+class Orange; end
+Stuff::Orange.new # => an orange
+# Class defintion doesn't interfere with those defined outside the namespace too.
+
+puts Stuff::MoreStuff::A_CONSTANT # => 7
+# Can also nest modules for more namespaces
+```
 
 15. What is the difference between instance methods and class methods? Show how each is created and used.
 
+An instance method can only be called on an object instanciated from the class.
+```ruby
+class Animal
+  def eat; end
+end
+
+Animal.new.eat # On the instance, yes!
+Animal.eat # Nope
+```
+
+A class method can only be called on the class itself. It's defined using a different syntax. The method name appended to `self.`. Self in this context references the class, so the method is defined on the class.
+
+```ruby
+class Animal
+  def self.eat; end
+end
+
+Animal.eat # On the class, yes!
+Animal.new.eat # Nope, not available to the instance
+```
+
 16. How are the methods `==` and `equal?` different? Show it with an example
+The implementation of the `==` method varies depending on the class. Generally it will check if the two objects have the same value. What 'value' means will depend on how the class is implemented.
 
-17. Give 5 examples of different fake operators and how they're used.
+```ruby
+a = [0, 1, 2]
+b = [0, 1, 2]
+puts a == b # => true
+# Different objects, in memory, but same value
 
-18. What are the differences between classes and modules?
+b = []
+puts a == b # => false
+```
 
+The `equal?` method always checks if the two variables point to the same address in memory. In other words, if the two variables reference the identical object.
 
+```ruby
+a = [0, 1, 2]
+b = [0, 1, 2]
+puts a.equal? b # => false
+# Different objects, so false
 
+b = a
+puts a.equal? b # => true
+# Point to the same object, so true
 
+a = 5
+b = 5
+puts a.equal? b # => true
+# Note, numerics and symbols are the same object if they have the same value.
+```
 
-
-
-24. The following is a short description of the application:
-
-The application lets a customer place an order for a meal.
-A meal always has three meal items: a burger, a side, and drink.
-For each meal item, the customer must choose an option.
-The application must compute the total cost of the order.
-
-Write an application from this description.
+17. What are the differences between classes and modules?
+Instances can be created from classes, while modules must be included into classes to add behaviour to objects.
 
 =end
