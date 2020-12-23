@@ -325,21 +325,87 @@ puts self # => main
 puts self.class # => Object
 # `self` references `main` an instance of the `Object` class
 ```
-However, there's a twist to it. Ruby also uses `self` implicitly to determine what object a method with no explicit called is called on.
 
-The `self` keyword can also been seen as a method that returns an object or another based on where it is called.
+However, there's a twist to it. Ruby also uses `self` implicitly to determine what object a method with no explicit caller is called on.
+
+For example, `self` is implicitly used when calling a method from an instance method without an explicit caller.
+```ruby
+# code ommited
+def an_instance_method
+  another_method # calls another instance method on same calling object
+  self.another_method # the method call above is the same as this one
+end
+# code ommited
+```
 
 13. What are collaborator objects? When can it be helpful to use them? Show how they're used.
 
+A collaborator object is an object referenced by another object's instance variable. In other words, it is an object that's part of another object's state.
+They are helpful to use espcially to model has-a or has-many relationships.
+
+For example, a board object has many squares:
+```ruby
+class Board
+  def initialize
+    @squares = [Square.new, Square.new]
+  end
+end
+```
+
+Now, a `Board` instance will have an instance variable with an array as the collaborator object. The array itself is an object with instance variables (the indexes) that reference the `Square` collaborator objects.
+
+The final result, is the the behaviour of the `Square` can be used within the `Board` object. That includes the state indirectly used behind the interface.
+
+Using inheritence to accomplish that wouldn't model this problem intuitively or allow us to seperate parts into the appropriate abstractions. Inheritence is more appropriate for is-a relationships. Using a collaborator object models has-a relationships much better. 
+
+Modules can be used too for modeling has-a relationships. But, modules share only behaviour and have no state. That means they can be used to map 'has-a behaviour or set of behaviours' relationships, but not 'has-a object with state'.
+
 14. What are modules in Ruby? What are two purposes they're used for? Show how they're used for that.
+Modules are containers. They can contain methods and share that behaviour with other classes through what's called interface inheritence. They can contain methods simply to group them together and encapsulate them behind a namespace, so they don't pollute the top level scope. Finally, they can be used generally as a namespace to contain classes, other modules, constants and even entire libraries.
+
+When modules contain methods, they can be used for interface inheritence. The behaviour the module contains can be included in classes. In other words, the methods can be shared in many classes. Also, any number of modules can be included in classes.
+
+```ruby
+module Walkable
+  def walk
+    puts 'It walks'
+ end
+end
+
+class Animal
+  include Walkable
+end
+
+Animal.new.walk # => It walks
+
+puts Animal.ancestors
+
+# Animal
+# Walkable <- added right after the class and before superclass
+# Object
+# Kernel
+# BasicObject
+```
+
+Even though no instance method is defined on the class `Animal`, the instance method `walk` is available to instances of that class. That's because including the module adds it to the class' method lookup path.
+
+So, modules are Ruby's approach to letting user add functionality from multiple sources to classes. Including modules is similar to the multiple inheritence of other languages, but it by-passes the name-collision problems of multiple inheritence.
+
+
 
 15. What is the difference between instance methods and class methods? Show how each is created and used.
 
 16. How are the methods `==` and `equal?` different? Show it with an example
 
-17. What are fake operators in Ruby? Give 5 examples of different fake operators and how they're used.
+17. Give 5 examples of different fake operators and how they're used.
 
-17.5 What are the differences between classes and modules?
+18. What are the differences between classes and modules?
+
+
+
+
+
+
 
 24. The following is a short description of the application:
 
