@@ -1,0 +1,13 @@
+2. What is an object and what is it relationship to a class?
+An object is a container for data and the methods that manipulate that data. Objects are specific instances created from classes. Classes define instance methods that are available to instances of that class. The instance methods in turn outline the kind of data the object's instance variables will store.
+
+In the below example, the `new` class method is called on the `Dog` class on line 2, which returns a new object of the `Dog` class. The `Dog` instance has access to the instance method `bark` and has an instance variable `@name`.
+```ruby
+class Dog
+  def initialize(name)
+    @name = name
+  end
+  def bark; end
+end
+Dog.new('sparky')
+```

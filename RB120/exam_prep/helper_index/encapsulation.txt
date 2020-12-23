@@ -1,0 +1,18 @@
+3. What is encapsulation and is the benefit of using it in programming?
+Encapsulation is taking data and the methods that operate on that data and putting them inside a container. The result is the data is protected from outside access. A public interface is defined to interact with the behaviour and data of the container.
+
+```ruby
+class Dog
+  def initialize(name)
+    @name = name
+  end
+
+  def print_dog_info
+    puts name
+  end
+
+  private
+
+  attr_reader :name
+end
+```

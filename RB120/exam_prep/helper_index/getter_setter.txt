@@ -1,0 +1,29 @@
+11. What are getters and setters? Show the different ways to create them.
+By default, the data that the instance variables of an object reference is not accessible from outside that object.
+
+For example, when I create an instance of this class, there's no way for a user of that object to access the data referenced by `@name`:
+```ruby
+class Player
+  def initalize
+    @name = 'Long Pants'
+  end
+end
+
+a_player = Player.new
+a_player.name # => NoMethodError
+```
+
+`@name` is scoped to the object referenced by `a_player`. That state is encapsulated within the object and protected from outside access.
+
+Getters and setters are methods used to expose an interface to "get" or read that data and "set" or write to that data.
+
+```ruby
+class Player
+  def initalize
+    @name = 'Long Pants'
+  end
+end
+
+a_player = Player.new
+a_player.name # => NoMethodError
+```

@@ -1,0 +1,17 @@
+5. What is class inheritence? Show how it works in Ruby.
+It's a code reuse mechanism that allows a class to inherit behaviour from another class. They are called the subclass and superclass respectively.
+
+It works in Ruby like this:
+```ruby
+class Vehicle
+  def accelerate; end
+end
+class Car < Vehicle; end
+```
+The `<` token is used to make the subclass on the left inherit from the superclass on the right.
+
+Now, the `accelerate` method can be called on instances of the `Car` class.
+```ruby
+Car.new.accelerate
+```
+That instance method is not defined on the `Car` class, but it can called on instances of that class, because the superclass was added to the method lookup path by making the subclass inherit from it.

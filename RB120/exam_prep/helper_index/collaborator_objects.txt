@@ -1,0 +1,21 @@
+13. What are collaborator objects? When can it be helpful to use them? Show how they're used.
+
+A collaborator object is an object referenced by another object's instance variable. In other words, it is an object that's part of another object's state.
+They are helpful to use espcially to model has-a or has-many relationships.
+
+For example, a board object has many squares:
+```ruby
+class Board
+  def initialize
+    @squares = [Square.new, Square.new]
+  end
+end
+```
+
+Now, a `Board` instance will have an instance variable with an array as the collaborator object. The array itself is an object with instance variables (the indexes) that reference the `Square` collaborator objects.
+
+The final result, is the the behaviour of the `Square` can be used within the `Board` object. That includes the state indirectly used behind the interface.
+
+Using inheritence to accomplish that wouldn't model this problem intuitively or allow us to seperate parts into the appropriate abstractions. Inheritence is more appropriate for is-a relationships. Using a collaborator object models has-a relationships much better. 
+
+Modules can be used too for modeling has-a relationships. But, modules share only behaviour and have no state. That means they can be used to map 'has-a behaviour or set of behaviours' relationships, but not 'has-a object with state'.

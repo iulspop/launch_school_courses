@@ -1,0 +1,25 @@
+1. What is polymorphism with ducktyping?
+Polymorphism is different types of objects responding to the same interface.
+Ducktyping is a method of accomplishing polymorphism by creating a public method
+with the same name on unrelated classes. Then, instances of those classes can respond to that same interface interchangebly, as if they were the same type (if it quacks like a duck, then its a duck.)
+
+In the example below, even though a Horse instance has a different class than Duck, it can be used as if it did in this context, since we created an interface that responds to the same message.
+```ruby
+class Duck
+  def quack
+    'quack'
+  end
+end
+
+class Horse
+  def quack
+    'Hiuuuhhhh'
+  end
+end
+
+def quack_them_all(ducks)
+  ducks.each { |duck| puts duck.quack }
+end
+
+quack_them_all([Duck.new, Horse.new])
+```

@@ -137,7 +137,6 @@ car.accelarate
 ```
 So, public instance methods form the interface users of the object interact with.
 
-
 To define a private method, the private keyword is added to the class definition and any instance method defined on lines below the keyword are private methods.
 ```ruby
 class Car
