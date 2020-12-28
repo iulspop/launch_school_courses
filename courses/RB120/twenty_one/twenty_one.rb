@@ -30,5 +30,5 @@ Player
 =end
 
 class Deck
-  ?
+
 end
