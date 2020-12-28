@@ -22,7 +22,7 @@ end
 describe 'Deck class' do
   it 'can draw card from deck' do
     deck = Deck.new
-    _(deck.draw_card).must_equal Card.new('Ace', 'Spades')
+    _(deck.draw_card.is_a? Card).must_equal true
   end
 
   it 'draw card stills works when init Deck with shuffle' do
