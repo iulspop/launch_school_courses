@@ -5,30 +5,77 @@ The player is given the option to hit or stay. If they hit, they draw a card. If
 Finally the player with the closest value to 21 wins the round, or if the hands are equal, then its a tie. The first to win five rounds wins.
 
 Card
-  has a value & suit
+  @rank
+  @suit
+  -------
+  init(rank, suit)
+  rank
+  to_s
 
 Deck
-  has cards
+  @cards = array of cards
   --------
+  init deck
+  shuffle
+  draw_card
 
 Hand
-  has cards
-  --------
-  draw card from deck
-  calc hand value
+  @cards = array of cards
+  -------
+  << card
+  total
+  compare
+  to_s
+
+
 
 Participant
+  @hand = Hand.new
+  -------
+  play_turn
+
+  private
+
 
 Dealer
-  has a hand
-  -------
 
 Player
-  has a hand
+
+TwentyOneGame
+  @dealer
+  @player
+  @deck
+  @score
   -------
+
+pieces
+
+card
+card
+card
+
+hand => total
+
+hand draws card from deck
+
+hand is displayed (option hidden)
 
 =end
 
-class Deck
+class Card
+  attr_reader :rank
 
+  def initialize(rank, suit)
+    @rank = rank
+  end
+
+  def ==(other_card)
+    rank == other_card.rank
+  end
+end
+
+class Deck
+  def draw_card
+    Card.new('Ace', 'Spades')
+  end
 end
