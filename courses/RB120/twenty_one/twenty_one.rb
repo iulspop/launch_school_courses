@@ -61,17 +61,28 @@ hand draws card from deck
 hand is displayed (option hidden)
 
 =end
-
+require_relative 'ascii_cards'
 class Card
+  include AsciiCardable
+
   attr_reader :rank
 
   def initialize(rank, suit)
     @rank = rank
+    @suit = suit
   end
 
   def ==(other_card)
     rank == other_card.rank
   end
+
+  def to_s
+    ascii_card
+  end
+
+  private
+
+  attr_reader :suit
 end
 
 class Deck

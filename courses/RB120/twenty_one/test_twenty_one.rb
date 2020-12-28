@@ -16,7 +16,31 @@ describe 'Card class' do
     _(ace == queen).must_equal false
   end
 
-  # it 'to_s returns ASCII art for card'
+  it 'to_s returns ASCII art for card' do
+    _(Card.new('Ace', 'Spades').to_s).must_equal(
+' _________ 
+|A        |
+|@   *    |
+|   / \   |
+|  /_@_\  |
+|    !    |
+|   ~ ~  @|
+|        V|
+ ~~~~~~~~~ ')
+  end
+
+  it 'to_s returns ASCII art for card' do
+    _(Card.new(2, 'Hearts').to_s).must_equal(
+' _________ 
+|2        |
+|#        |
+|    #    |
+|         |
+|    #    |
+|        #|
+|        Z|
+ ~~~~~~~~~ ')
+  end
 end
 
 describe 'Deck class' do
