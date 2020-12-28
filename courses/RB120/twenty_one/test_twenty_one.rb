@@ -30,3 +30,15 @@ describe 'Deck class' do
     _(deck.draw_card.is_a? Card).must_equal true
   end
 end
+
+describe 'Hand class' do
+  it 'can add cards to hand using <<' do
+    hand = Hand.new
+    _(hand << Card.new('Ace', 'Spades')).must_equal nil
+  end
+
+  it 'can add cards to hand using <<' do
+    hand = Hand.new
+    _(hand << Card.new('Ace', 'Spades')).must_equal nil
+  end
+end

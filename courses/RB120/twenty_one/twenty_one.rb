@@ -94,3 +94,18 @@ class Deck
 
   attr_reader :cards
 end
+
+class Hand
+  def initialize
+    @cards = []
+  end
+
+  def <<(card)
+    cards << card
+    nil
+  end
+
+  private
+
+  attr_reader :cards
+end
