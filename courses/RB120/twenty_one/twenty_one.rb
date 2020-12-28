@@ -106,7 +106,18 @@ class Hand
   end
 
   def total
-    15
+    total = 0
+
+    cards.each do |card|
+      rank = card.rank
+      if %w(King Queen Jack).include? rank
+        total += 10
+      elsif rank.is_a? Integer
+        total += rank
+      end
+    end
+
+    total
   end
 
   private
