@@ -24,4 +24,9 @@ describe 'Deck class' do
     deck = Deck.new
     _(deck.draw_card).must_equal Card.new('Ace', 'Spades')
   end
+
+  it 'draw card stills works when init Deck with shuffle' do
+    deck = Deck.new(shuffle: true)
+    _(deck.draw_card.is_a? Card).must_equal true
+  end
 end

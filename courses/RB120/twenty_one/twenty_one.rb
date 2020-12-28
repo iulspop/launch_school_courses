@@ -75,7 +75,22 @@ class Card
 end
 
 class Deck
-  def draw_card
-    Card.new('Ace', 'Spades')
+  SUITS = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+  CARDS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
+
+  def initialize(shuffle: false)
+    @cards = CARDS.product(SUITS).each_with_object([]) do |(rank, suit), cards|
+      cards << Card.new(rank, suit)
+    end
+
+    @cards = @cards.shuffle if shuffle
   end
+
+  def draw_card
+    cards.pop
+  end
+
+  private
+
+  attr_reader :cards
 end
