@@ -45,7 +45,28 @@ describe 'Hand class' do
     _(hand.total).must_equal 15
   end
 
-  # it 'calculates hand total for Jack, King and Queen cards' do
-  #   hand = 
-  # end
+  it 'Jack, Queen and King cards are worth 10' do
+    hand = Hand.new
+    hand << Card.new('Jack', 'Spades')
+    hand << Card.new('Queen', 'Spades')
+    hand << Card.new('King', 'Spades')
+    _(hand.total).must_equal 30
+  end
+
+  it 'Ace cards are worth 11 when total less than 22' do
+    hand = Hand.new
+    hand << Card.new('Ace', 'Spades')
+    hand << Card.new(5, 'Spades')
+    hand << Card.new(5, 'Spades')
+    _(hand.total).must_equal 21
+  end
+
+  it 'Ace cards are worth 1 when total more than 21' do
+    hand = Hand.new
+    hand << Card.new('Ace', 'Spades')
+    hand << Card.new('Ace', 'Spades')
+    hand << Card.new('Ace', 'Spades')
+    hand << Card.new('King', 'Spades')
+    _(hand.total).must_equal 13
+  end
 end

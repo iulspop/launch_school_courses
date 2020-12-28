@@ -96,6 +96,8 @@ class Deck
 end
 
 class Hand
+  HAND_VALUE_TARGET = 21
+
   def initialize
     @cards = []
   end
@@ -107,7 +109,6 @@ class Hand
 
   def total
     total = 0
-
     cards.each do |card|
       rank = card.rank
       if %w(King Queen Jack).include? rank
@@ -116,11 +117,18 @@ class Hand
         total += rank
       end
     end
-
-    total
+    total += adjust_aces_value(total)
   end
 
   private
 
   attr_reader :cards
+
+  def adjust_aces_value(total)
+    value = 0
+    aces_count = cards.count { |card| card.rank == 'Ace' }
+    value += aces_count * 11
+    aces_count.times { value -= 10 if total + value > HAND_VALUE_TARGET }
+    value
+  end
 end
