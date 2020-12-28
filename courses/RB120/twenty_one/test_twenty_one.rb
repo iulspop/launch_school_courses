@@ -20,25 +20,28 @@ describe 'Card class' do
 end
 
 describe 'Deck class' do
-  it 'can draw card from deck' do
+  it 'can draw from deck' do
     deck = Deck.new
-    _(deck.draw_card.is_a? Card).must_equal true
+    _(deck.draw.is_a? Card).must_equal true
   end
 
-  it 'draw card stills works when init Deck with shuffle' do
+  it 'draw stills works when init Deck with shuffle' do
     deck = Deck.new(shuffle: true)
-    _(deck.draw_card.is_a? Card).must_equal true
+    _(deck.draw.is_a? Card).must_equal true
   end
 end
 
 describe 'Hand class' do
-  it 'can add cards to hand using <<' do
+  it 'adds cards to hand using <<' do
     hand = Hand.new
-    _(hand << Card.new('Ace', 'Spades')).must_equal nil
+    _(hand << Card.new('Ace', 'Spades')).must_nil nil
   end
 
-  it 'can add cards to hand using <<' do
+  it 'calculates hand total for numeric ranked cards' do
     hand = Hand.new
-    _(hand << Card.new('Ace', 'Spades')).must_equal nil
+    hand << Card.new(1, 'Spades')
+    hand << Card.new(5, 'Spades')
+    hand << Card.new(9, 'Spades')
+    _(hand.total).must_equal 15
   end
 end

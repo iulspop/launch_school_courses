@@ -86,7 +86,7 @@ class Deck
     @cards = @cards.shuffle if shuffle
   end
 
-  def draw_card
+  def draw
     cards.pop
   end
 
@@ -103,6 +103,10 @@ class Hand
   def <<(card)
     cards << card
     nil
+  end
+
+  def total
+    15
   end
 
   private
