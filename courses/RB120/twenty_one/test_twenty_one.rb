@@ -34,7 +34,7 @@ end
 describe 'Hand class' do
   it 'adds cards to hand using <<' do
     hand = Hand.new
-    _(hand << Card.new('Ace', 'Spades')).must_nil nil
+    _(hand << Card.new('Ace', 'Spades')).must_be_nil nil
   end
 
   it 'calculates hand total for numeric ranked cards' do
@@ -44,4 +44,8 @@ describe 'Hand class' do
     hand << Card.new(9, 'Spades')
     _(hand.total).must_equal 15
   end
+
+  # it 'calculates hand total for Jack, King and Queen cards' do
+  #   hand = 
+  # end
 end
