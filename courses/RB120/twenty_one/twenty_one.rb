@@ -131,6 +131,10 @@ class Hand
     total += adjust_aces_value(total)
   end
 
+  def to_s
+    concat_hand + values_and_total
+  end
+
   private
 
   attr_reader :cards
@@ -141,5 +145,31 @@ class Hand
     value += aces_count * 11
     aces_count.times { value -= 10 if total + value > HAND_VALUE_TARGET }
     value
+  end
+
+  def concat_card(card1, card2)
+    empty_space = AsciiCardable::EMPTY_SPACE
+    lines = card1.split("\n").zip(empty_space.split("\n"), card2.split("\n"))
+
+    lines.map do |(line, empty_line, line2)|
+      line + empty_line + line2
+    end.join("\n")
+  end
+
+  def concat_hand
+    cards.map(&:to_s).reduce { |concat, card| concat_card(concat, card) }
+  end
+
+  def values_and_total(hide_value = false)
+    values = "\n"
+    cards.each_with_index do |card, index|
+      if index == cards.length - 1 && hide_value
+        return values << '?'.center(11) + ' =   ?'
+      else
+        values << card.rank.to_s.center(11)
+        values << '  +  ' if index != cards.length - 1
+      end
+    end
+    values + ' =  ' + total.to_s
   end
 end

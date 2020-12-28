@@ -1,5 +1,5 @@
 require 'io/console'
-load 'ascii_art.rb'
+require_relative 'ascii_art.rb'
 
 WIN_SCORE = 5
 MAX_TOTAL = 21

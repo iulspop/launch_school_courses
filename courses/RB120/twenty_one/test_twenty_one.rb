@@ -93,4 +93,23 @@ describe 'Hand class' do
     hand << Card.new('King', 'Spades')
     _(hand.total).must_equal 13
   end
+
+  it 'to_s returns ASCII representation of hand with score underneath' do
+    hand = Hand.new
+    hand << Card.new(5, 'Diamonds')
+    hand << Card.new('Jack', 'Clubs')
+    hand << Card.new('King', 'Spades')
+    _(hand.to_s).must_equal(
+' _________       _________       _________ 
+|5        |     |J /~~|_  |     |K |/|\|  |
+|O        |     |+ | o`,  |     |@ \- -/  |
+|  O   O  |     |  | -|   |     | ! |-|   |
+|    O    |     | =~)+(_= |     |  % I %  |
+|  O   O  |     |   |- |  |     |   |-| ! |
+|        O|     |  `.o | +|     |  /- -\ @|
+|        S|     |  ~|__/ P|     |  |\|/| X|
+ ~~~~~~~~~       ~~~~~~~~~       ~~~~~~~~~ 
+     5       +     Jack      +     King     =  25'
+    )
+  end
 end

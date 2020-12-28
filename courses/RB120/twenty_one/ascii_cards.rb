@@ -497,15 +497,15 @@ _________
 MSG
 
 EMPTY_SPACE = <<-MSG
-    
-    
-    
-    
-    
-    
-    
-    
-    
+     
+     
+     
+     
+     
+     
+     
+     
+     
 MSG
 
 DECK = {
