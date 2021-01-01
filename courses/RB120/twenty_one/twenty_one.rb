@@ -27,8 +27,6 @@ Hand
   compare !!!!? comparable?
   to_s
 
-
-
 Participant
   @hand = Hand.new
   -------
@@ -173,3 +171,87 @@ class Hand
     values + ' =  ' + total.to_s
   end
 end
+
+
+class Player
+  def initialize(deck)
+    @hand = Hand.new
+    hand << deck.draw
+    hand << deck.draw
+  end
+
+  def play_turn(deck)
+    choice = get_player_input
+    hand << deck.draw if choice == 'hit'
+  end
+
+  private
+
+  attr_reader :hand
+end
+
+class Dealer
+
+end
+
+class Game
+  def initialize
+    @deck   = nil
+    @player = nil
+    @dealer = nil
+    @score  = nil
+  end
+
+  def play
+    # welcome
+    game_loop
+    # goodbye
+  end
+
+  private
+
+  attr_accessor :deck, :player, :dealer, :score
+
+  def game_loop
+    loop do
+    reset_score
+
+    round_loop
+    # display_game_winner(scores)
+    # break unless play_again?
+    end
+  end
+
+  def reset_score
+    score  = Score.new
+  end
+
+  def round_loop
+    loop do
+      setup_round
+      round_winner = play_round
+      # after_round
+    end
+  end
+
+  def setup_round
+    deck   = Deck.new
+    player = Player.new
+    dealer = Dealer.new
+  end
+
+  def play_round
+    round_winner = player.play_turn
+    # round_winner ||= dealer.play_turn
+    # round_winner ||= determine_round_winner
+  end
+
+  def after_round(round_winner)
+    # display_hands
+    # score.update(round_winner)
+    # display_score
+
+    # break if win_game?
+    # display_round_winner
+    # any_key_to_continue('Press any key to start next round...')
+  end
