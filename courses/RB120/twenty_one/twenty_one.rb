@@ -24,7 +24,7 @@ Hand
   -------
   << card
   total
-  compare
+  compare !!!!? comparable?
   to_s
 
 
@@ -107,7 +107,7 @@ class Deck
 end
 
 class Hand
-  HAND_VALUE_TARGET = 21
+  HAND_TARGET_VALUE = 21
 
   def initialize
     @cards = []
@@ -143,7 +143,7 @@ class Hand
     value = 0
     aces_count = cards.count { |card| card.rank == 'Ace' }
     value += aces_count * 11
-    aces_count.times { value -= 10 if total + value > HAND_VALUE_TARGET }
+    aces_count.times { value -= 10 if total + value > HAND_TARGET_VALUE }
     value
   end
 
