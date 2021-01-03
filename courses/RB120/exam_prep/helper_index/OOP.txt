@@ -1,2 +1,0 @@
-1. What is OOP and why is it important?
-OOP is an approach to programming that uses the object as the central principle of code organisation. It's important because it allows us to write complex programs that can be changed cost-effectively, because objects can make the pieces of our program self-contained.
