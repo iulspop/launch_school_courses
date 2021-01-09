@@ -255,3 +255,4 @@ class Game
     # display_round_winner
     # any_key_to_continue('Press any key to start next round...')
   end
+end
