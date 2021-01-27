@@ -1,0 +1,55 @@
+9. What is the `super` keyword in Ruby? Show how it works.
+The `super` keyword is used inside instance methods or class methods to call the next method up the lookup chain with the same name.
+
+I show the use of the `super` keyword below.
+```ruby
+class Player
+  def initialize(strength, intelligence)
+    @strength = strength
+    @intelligence = intelligence
+  end
+end
+
+class Human < Player
+  def initialize
+    super(6, 6)
+  end
+end
+
+class Orc < Player
+  def initialize
+    super(8, 3)
+  end
+end
+```
+
+The `super` keyword is used in the `Human` and `Orc` classes' `initialize method` to call same method one step up the method lookup chain. That is the same as calling the next method up the inheritence hierarchy. In this case that is the `initialize` instance method on the `Player` class.
+
+The `super` keyword implicitly takes all method parameters as arguments when called without parentheses.
+
+The following example illustrates that:
+```ruby
+class OneThing
+  def foo(x, y); end
+end
+
+class TwoThing < OneThing
+  def foo(x, y, z)
+    super
+  end
+end
+
+TwoThing.new.foo(1, 2, 3) # => ArgumentError
+```
+
+The code raises a `ArgumentError` when executed, because the `super` method on line 8 calls the `foo` instance method of the `OneThing` class with 3 arguments, since the three parameters of the `foo` method on `TwoThing` were passed implicitly.
+
+To fix that, we can add parentheses to the `super` keyword to explicitly pass in the arguments we want, in the order we want.
+
+```ruby
+  def foo(x, y, z)
+    super()     # calls next method up with no arguments
+    super(x, y) # with two arguments
+    super(y, x) # or changed order
+  end
+```

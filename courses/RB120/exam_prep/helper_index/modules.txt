@@ -1,0 +1,60 @@
+14. What are modules in Ruby? What are two purposes they're used for? Show how they're used for that.
+Modules are containers. They can contain methods and share that behaviour with other classes through what's called interface inheritence. They can contain methods simply to group them together and encapsulate them behind a namespace, so they don't pollute the top level scope. Finally, they can be used generally as a namespace to contain classes, other modules, constants and even entire libraries.
+
+When modules contain methods, they can be used for interface inheritence. The behaviour the module contains can be included in classes. In other words, the methods can be shared in many classes. Also, any number of modules can be included in classes.
+
+```ruby
+module Walkable
+  def walk
+    puts 'It walks'
+ end
+end
+
+class Animal
+  include Walkable
+end
+
+Animal.new.walk # => It walks
+
+puts Animal.ancestors
+
+# Animal
+# Walkable <- added right after the class and before superclass
+# Object
+# Kernel
+# BasicObject
+```
+
+Even though no instance method is defined on the class `Animal`, the instance method `walk` is available to instances of that class. That's because including the module adds it to the class' method lookup path.
+
+So, modules are Ruby's approach to letting user add functionality from multiple sources to classes. Including modules is similar to the multiple inheritence of other languages, but it by-passes the name-collision problems of multiple inheritence.
+
+Another use for modules are as namespaces. Namespaces create a new scope that can be accessed behind a constant. The result is you can be confident that what's contained in the namespace doesn't interfere with other similarly named stuff in outside that namespace.
+
+```ruby
+module Stuff
+  def self.puts
+    'hey hey'
+  end
+
+  class Orange
+    def initialize
+      puts 'an orange'
+    end
+  end
+
+  module MoreStuff
+    A_CONSTANT = 7
+  end
+end
+
+puts Stuff.puts # => 'hey hey'
+# The methods defined on the module don't interfere with those defined elsewhere, like Kernel#puts
+
+class Orange; end
+Stuff::Orange.new # => an orange
+# Class defintion doesn't interfere with those defined outside the namespace too.
+
+puts Stuff::MoreStuff::A_CONSTANT # => 7
+# Can also nest modules for more namespaces
+```

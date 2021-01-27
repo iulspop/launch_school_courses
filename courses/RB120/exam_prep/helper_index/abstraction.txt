@@ -1,0 +1,11 @@
+4. What is abstraction and is the benefit of using it in programming?
+Abstraction in programming is creating a new level of meaning to interact with by hiding details and focusing on a general concept that's easily understood.
+
+Abstractions can be created in OOP with classes and objects. For example, we can define a Car class and instanciate an object from it.
+```ruby
+class Car
+  # car does things and has state
+end
+car = Car.new
+```
+From the user's perspective, the details of how the `Car` object is implemented is hidden. Hence, they can operate at a new level of meaning and interact with the 'car' concept. This is helpful, because the simpler concept without the details leave them room to think about how other pieces/concepts/objects fit with the car object.
