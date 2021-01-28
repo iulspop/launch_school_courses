@@ -38,5 +38,9 @@
 
 16. What are the differences between lambda and procs?
 
+17. What are arity rules for blocks?
+
+18. What is a binding?
+
 
 =end
