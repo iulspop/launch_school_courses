@@ -1,5 +1,38 @@
 =begin
 1. What is a closure? Show how it is implemented with a Proc.
+  saves the environment around it
+
+
+```ruby
+a = 1
+my_proc = Proc.new do
+  puts a
+  puts b
+end
+b = 2
+
+
+def call_proc(my_proc)
+  my_proc.call
+end
+
+call_proc(my_proc)
+```
+
+  piece code
+
+  scope
+  time
+
+  variables has binding scope + closure?
+  or closure has binding to var?
+
+  wood
+  nails
+
+  hammer
+
+  hammer (wood, nails)
 
 2. How do closures relate to scope? Explain using a lamba example.
 
@@ -41,6 +74,29 @@
 17. What are arity rules for blocks?
 
 18. What is a binding?
+It's binding are references to surrounding environment/context?
+Includes local variables, methods, constants and other artifacts???
+
+19. Explain two places where unary `&` can be used and for what?
+
+
+closure, binding, block, proc, lambdas
+
+
+nope!
+```ruby
+
+loop do
+
+  loop do
+    a = 1
+    break
+  end
+
+  a = 2
+  break
+end
+```
 
 
 =end
