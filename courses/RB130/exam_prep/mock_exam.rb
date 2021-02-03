@@ -7,19 +7,71 @@
 
 2. How do closures relate to scope? Explain using a lamba example.
 
-3. How are blocks used when passed in to a method call?
+3. How are blocks used when passed in to a method call? And how does it work it terms of execution?
 
-4. How does this syntax work: method_call(&:+)?
+4. What are two uses cases for writing method that use blocks or procs? Show with examples.
 
-5. What is the purpose of Bundler? What are the config files associated with it? How do you configure them?
+5. How do explicit block parameters work? What is the benefit of using them?
 
-6. What is the purpose of Rake? What is the config file associated with it? How do you configure it?
+6. What are the arity rules of blocks, Procs and lambas?
 
-7. What is the purpose of rvm?
+7. When can you pass a block to a method?
 
-8. What is the purpose of Ruby gems?
+8. How does the `&:symbol` syntax work?
 
-9. Explain these testing terms:
+9. What will this return and why?
+
+```ruby
+a = 5
+lambda = lamda do
+  puts a, b
+end
+b = 10
+
+def call_lambda(&lambda)
+  b = 15
+  lambda.call
+end
+
+call_lambda(&lambda)
+```
+
+10. What will the `call_first` method invocation return and why?
+
+```ruby
+def call_second
+  yield
+end
+
+def call_first(&closure)
+  call_second(&closure)
+  15
+end
+
+call_first do
+  return 10
+end
+```
+
+11. What will this return and why?
+
+```ruby
+def reduce(collection, accumulator = nil)
+  accumulator = collection.shift if accumulator.nil?
+  collection.each do |item|
+    accumulator = yield(accumulator, item)
+  end
+  accumulator
+end
+
+array = [1, 1, 1]
+
+reduce(array) do |sum, el|
+  sum + el
+end
+```
+
+12. Explain these testing terms:
      test suite,
      test,
      assertion,
@@ -28,24 +80,21 @@
      expectations-based vs assertions-based interface,
      what is ...FE.SS
 
-10. What are the differences between Minitest and Rspec?
+13. What are the differences between Minitest and Rspec?
 
-11. What is the SEAT approach to tests? Make a demonstration.
+14. What is the SEAT approach to tests? Make a demonstration.
 
-12. Recall and use in an example test 5 different Minitest assertions.
+15. Recall and use in an example test 5 different Minitest assertions.
 
-13. When can you pass a block to a method?
+16. What is the purpose of Bundler? What are the config files associated with it? How do you configure them?
 
-14. How to write a method with an explicit block parameter? Why would you write one like that?
+17. What is the purpose of Rake?
 
-15. What are good uses cases for writing method that us blocks or procs?
+18. What is the purpose of rvm?
 
-16. What are the differences between lambda and procs?
+19. What is the purpose of Ruby gems?
 
-17. What are arity rules for blocks?
-
-18. What is a binding?
-
-19. Explain two places where unary `&` can be used and for what?
+20. Solve this problem, zip solution and submit: https://launchschool.com/exercises/cbf0104f
+    Don't forget Rubocop!
 
 =end
