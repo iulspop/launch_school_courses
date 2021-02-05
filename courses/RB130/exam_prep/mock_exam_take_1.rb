@@ -1,8 +1,35 @@
 =begin
 1. What is a closure? Show how it is implemented with a Proc.
 
-```ruby
+A closure is a piece of code that can be passed around a program and invoked.
+It also retains references to the surrounding artefacts where and when it's created,
+such that those artefacts like local variables are accessible within the closure wherever it's invoked.
+Blocks, Procs and lambdas are implementations of closures in Ruby. The references
+they retain is called 'binding' in Ruby.
 
+The following code outputs `10` and then raises a `NameError`. That is because the
+Proc instanciated on line 14 captures references that are available in the scope it's instanciated in 
+and at the time it's instanciated. Local variable `a` was initilized before the Proc is instanciated
+and is in the same scope, so the Proc's binding retains a reference to it.
+On line 23, the proc is called after being passed as an argument to the `call_proc` method call.
+Even though local variable `a` initialized on line 17 is not available in the self-contained
+scope of the method, the Proc retains a reference to what was available in the scope at the time it's
+initialized. local variable `a` was accessible in that scope and so it was retained by the binding.
+When the Proc executes it's block, `a` is resolved, but since local variable `b` was
+instanciated **after** the Proc, the binding retained no references to it, so the unknown variable
+raises a `NameError`.
+```ruby
+a = 10
+proc = Proc.new do
+  puts a, b
+end
+b = 1
+
+def call_proc(proc)
+  proc.call
+end
+
+call_proc(proc)
 ```
 
 2. How do closures relate to scope? Explain using a lamba example.
