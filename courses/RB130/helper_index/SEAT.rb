@@ -10,7 +10,7 @@ require "minitest/autorun"
 
 class TestSuite < Minitest::Test
   def setup
-    @number = 5 // Setup
+    @number = 5 # Setup
   end
 end
 ```
@@ -22,11 +22,11 @@ require "minitest/autorun"
 
 class TestSuite < Minitest::Test
   def setup
-    @number = 5 // Setup
+    @number = 5 # Setup
   end
 
   def test_increment_plus_one
-    number = @number += 1 // Execute
+    number = @number += 1 # Execute
   end
 ```
 
@@ -37,12 +37,12 @@ require "minitest/autorun"
 
 class TestSuite < Minitest::Test
   def setup
-    @number = 5 // Setup
+    @number = 5 # Setup
   end
 
   def test_increment_plus_one
-    number = @number += 1 // Execute
-    assert_equal 6, number // Assert
+    number = @number += 1 # Execute
+    assert_equal 6, number # Assert
   end
 end
 ```
@@ -54,16 +54,16 @@ require "minitest/autorun"
 
 class TestSuite < Minitest::Test
   def setup
-    @number = 5 // Setup
+    @number = 5 # Setup
   end
 
   def test_increment_plus_one
-    number = @number += 1 // Execute
-    assert_equal 6, number // Assert
+    number = @number += 1 # Execute
+    assert_equal 6, number # Assert
   end
 
   def teardown
-    @number = nil // Teardown (in this case the teardown is unessessary)
+    @number = nil # Teardown (in this case the teardown is unessessary)
   end
 end
 ```
