@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Directory File Index</title>
+  </head>
+  <body>
+    <h1>Directory File Index</h1>
+    <ul>
+      <% @ressource_list.each do |ressource| %>
+        <li><a href="<%= ressource.path %>"><%= ressource.name %></a></li>
+      <% end %>
+    </ul>
+  </body>
+</html>
