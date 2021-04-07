@@ -31,7 +31,11 @@ def directory_children(directory_path)
 end
 
 get "/" do
-  @ressource_list = directory_children("public").sort
-  @sort = params[:sort]
+  sort = params[:sort]
+
+  @ressource_list = directory_children("public")
+  @ressource_list = @ressource_list.sort         if sort == "ascending"
+  @ressource_list = @ressource_list.sort.reverse if sort == "descending"
+
   erb :home
 end
