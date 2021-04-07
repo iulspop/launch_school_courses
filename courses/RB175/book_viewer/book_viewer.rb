@@ -3,6 +3,6 @@ require "sinatra"
 require "sinatra/reloader"
 
 get "/" do
-  @hello = "title"
+  @chapter_titles = File.readlines("data/toc.txt")
   erb :home
 end
