@@ -5,6 +5,8 @@ require "sinatra/reloader"
 require "pathname"
 
 class Ressource
+  include Comparable
+
   def initialize(directory_path, file_name)
     @directory_path = directory_path
     @file_name = file_name
@@ -17,6 +19,10 @@ class Ressource
   def path
     "/" + @file_name
   end
+
+  def <=>(other_ressource)
+    self.name <=> other_ressource.name
+  end
 end
 
 def directory_children(directory_path)
@@ -25,6 +31,7 @@ def directory_children(directory_path)
 end
 
 get "/" do
-  @ressource_list = directory_children("public")
+  @ressource_list = directory_children("public").sort
+  @sort = params[:sort]
   erb :home
 end

@@ -5,9 +5,17 @@
   </head>
   <body>
     <h1>Directory File Index</h1>
+    <a href="/?sort=ascending">Ascending</a>
+    <a href="/?sort=decending">Descending</a>
     <ul>
-      <% @ressource_list.each do |ressource| %>
-        <li><a href="<%= ressource.path %>"><%= ressource.name %></a></li>
+      <% if @sort == "ascending" %>
+        <% @ressource_list.each do |ressource| %>
+          <li><a href="<%= ressource.path %>"><%= ressource.name %></a></li>
+        <% end %>
+      <% else %>
+        <% @ressource_list.reverse_each do |ressource| %>
+          <li><a href="<%= ressource.path %>"><%= ressource.name %></a></li>
+        <% end %>
       <% end %>
     </ul>
   </body>
