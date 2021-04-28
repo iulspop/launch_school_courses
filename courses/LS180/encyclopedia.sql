@@ -52,4 +52,13 @@ ALTER TABLE celebrities ALTER COLUMN last_name DROP NOT NULL;
 
 INSERT INTO celebrities (first_name, last_name, occupation, date_of_birth, deceased)
   VALUES ('Madonna', NULL, 'Singer, Actress', '1958-09-23', DEFAULT),
-         ('Prince', NULL, 'Singer, Songwriter, Musician, Actor', '1958-11-22', true),
+         ('Prince', NULL, 'Singer, Songwriter, Musician, Actor', '1958-11-22', true);
+
+ALTER TABLE animals DROP CONSTRAINT unique_binomial_name;
+
+INSERT INTO animals (name, binomial_name, max_weight_kg, max_age_years, conservation_status)
+  VALUES ('Dove', 'Columbidae Columbiformes', 2, 15, 'LC'),
+         ('Golden Eagle', 'Aquila Chrysaetos', 6.35, 24, 'LC'),
+         ('Peregrine Falcon', 'Falco Peregrinus', 1.5, 15, 'LC'),
+         ('Pigeon', 'Columbidae Columbiformes', 2, 15, 'LC'),
+         ('Kakapo', 'Strigops habroptila', 4, 60, 'CR');
