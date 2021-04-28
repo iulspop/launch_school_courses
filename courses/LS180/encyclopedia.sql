@@ -20,4 +20,4 @@ CREATE TABLE animals (
   max_weight_kg decimal(8, 3),
   max_age_years integer,
   conservation_status char(2)
-)
+);
