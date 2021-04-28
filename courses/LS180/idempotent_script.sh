@@ -1,4 +1,6 @@
-dropdb $1
-createdb $1
+DATABASE_NAME=$1
 
-psql $1 -f $1.sql
+dropdb $DATABASE_NAME
+createdb $DATABASE_NAME
+
+psql $DATABASE_NAME -f $DATABASE_NAME.sql
