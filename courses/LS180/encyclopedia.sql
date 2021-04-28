@@ -52,7 +52,8 @@ ALTER TABLE celebrities ALTER COLUMN last_name DROP NOT NULL;
 
 INSERT INTO celebrities (first_name, last_name, occupation, date_of_birth, deceased)
   VALUES ('Madonna', NULL, 'Singer, Actress', '1958-09-23', DEFAULT),
-         ('Prince', NULL, 'Singer, Songwriter, Musician, Actor', '1958-11-22', true);
+         ('Prince', NULL, 'Singer, Songwriter, Musician, Actor', '1958-11-22', true),
+         ('Elvis', 'Presley', 'Singer, Musician, Actor', '1935-01-08', NULL);
 
 ALTER TABLE animals DROP CONSTRAINT unique_binomial_name;
 
@@ -62,3 +63,25 @@ INSERT INTO animals (name, binomial_name, max_weight_kg, max_age_years, conserva
          ('Peregrine Falcon', 'Falco Peregrinus', 1.5, 15, 'LC'),
          ('Pigeon', 'Columbidae Columbiformes', 2, 15, 'LC'),
          ('Kakapo', 'Strigops habroptila', 4, 60, 'CR');
+
+SELECT population FROM countries WHERE name = 'USA';
+
+SELECT population, capital FROM countries;
+
+SELECT name FROM countries ORDER BY name;
+
+SELECT name, capital FROM countries ORDER BY population;
+
+SELECT name, capital FROM countries ORDER BY population ASC;
+
+SELECT name, binomial_name, max_weight_kg, max_age_years FROM animals ORDER BY max_age_years;
+
+SELECT name FROM countries WHERE population > 70000000 AND population < 200000000;
+
+SELECT first_name, last_name FROM celebrities WHERE deceased != true OR deceased IS NULL;
+
+SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE '%Singer%';
+
+SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE '%Act%';
+
+SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE '%Sing%Act%';
