@@ -138,3 +138,12 @@ ALTER TABLE celebrities RENAME TO singers;
 DELETE FROM singers WHERE occupation NOT LIKE '%Singer%';
 
 DELETE FROM countries;
+
+CREATE TABLE continents (
+  id serial PRIMARY KEY,
+  continent_name varchar(50)
+)
+
+ALTER TABLE countries DROP continent;
+
+SELECT * FROM countries;
