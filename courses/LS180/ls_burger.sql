@@ -41,3 +41,11 @@ SELECT avg(burger_cost) FROM orders WHERE side = 'Fries';
 SELECT min(side_cost) FROM orders WHERE side IS NOT NULL;
 
 SELECT DISTINCT(side), count(id) FROM orders WHERE side IS NOT NULL GROUP BY side;
+
+UPDATE orders SET drink = 'Lemonade' WHERE customer_name = 'James Bergman';
+
+UPDATE orders SET side = 'Fries', side_cost = 0.99, customer_loyalty_points = 13 WHERE customer_name = 'Aaron Muller';
+
+UPDATE orders SET side_cost = 1.20 WHERE side = 'Fries';
+
+SELECT customer_name, customer_loyalty_points, burger, side, drink, side_cost FROM orders;
