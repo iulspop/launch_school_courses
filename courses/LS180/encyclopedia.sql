@@ -137,13 +137,15 @@ ALTER TABLE celebrities RENAME TO singers;
 
 DELETE FROM singers WHERE occupation NOT LIKE '%Singer%';
 
-DELETE FROM countries;
-
 CREATE TABLE continents (
   id serial PRIMARY KEY,
   continent_name varchar(50)
-)
+);
 
 ALTER TABLE countries DROP continent;
+
+ALTER TABLE countries ADD continent_id integer;
+
+ALTER TABLE countries ADD FOREIGN KEY (continent_id) REFERENCES continents(id);
 
 SELECT * FROM countries;
