@@ -84,4 +84,4 @@ SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE 
 
 SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE '%Act%';
 
-SELECT first_name, last_name, occupation FROM celebrities WHERE occupation LIKE '%Sing%Act%';
+SELECT first_name, last_name, occupation FROM celebrities WHERE (occupation LIKE '%Actor%' OR occupation LIKE '%Actress%') AND occupation LIKE '%Singer%';
