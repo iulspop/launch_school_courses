@@ -35,3 +35,9 @@ SELECT customer_name FROM orders WHERE drink IS NULL;
 SELECT burger, side, drink FROM orders WHERE side <> 'Fries' OR side IS NULL;
 
 SELECT burger, side, drink FROM orders WHERE side IS NOT NULL AND drink IS NOT NULL;
+
+SELECT avg(burger_cost) FROM orders WHERE side = 'Fries';
+
+SELECT min(side_cost) FROM orders WHERE side IS NOT NULL;
+
+SELECT DISTINCT(side), count(id) FROM orders WHERE side IS NOT NULL GROUP BY side;
