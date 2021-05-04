@@ -139,8 +139,10 @@ DELETE FROM singers WHERE occupation NOT LIKE '%Singer%';
 
 CREATE TABLE continents (
   id serial PRIMARY KEY,
-  continent_name varchar(50)
+  name varchar(50)
 );
+
+DELETE FROM countries;
 
 ALTER TABLE countries DROP continent;
 
@@ -148,4 +150,52 @@ ALTER TABLE countries ADD continent_id integer;
 
 ALTER TABLE countries ADD FOREIGN KEY (continent_id) REFERENCES continents(id);
 
-SELECT * FROM countries;
+INSERT INTO continents (name)
+  VALUES ('Africa'),
+         ('Asia'),
+         ('Europe'),
+         ('North America'),
+         ('South America');
+
+INSERT INTO countries (name, capital, population, continent_id)
+  VALUES ('Brazil', 'Brasilia', 67158000, 5),
+         ('Egypt', 'Cairo', 96308900, 1),
+         ('France', 'Paris', 67158000, 3),
+         ('Germany', 'Berlin', 82349400, 3),
+         ('Japan', 'Tokyo', 126672000, 2),
+         ('USA', 'Washington D.C.', 325365189, 4);
+
+DROP TABLE IF EXISTS singers;
+CREATE TABLE singers(
+  id serial PRIMARY KEY,
+  name varchar(100) NOT NULL
+);
+
+CREATE TABLE albums (
+  id serial PRIMARY KEY,
+  album_name varchar(100) NOT NULL,
+  released date NOT NULL,
+  genre varchar(100) NOT NULL,
+  label varchar(100) NOT NULL,
+  singer_id integer REFERENCES singers(id)
+);
+
+INSERT INTO singers (name)
+  VALUES ('Bruce Springsteen'),
+         ('Prince'),
+         ('Madonna'),
+         ('Elvis Presley'),
+         ('Elvis Presley'),
+         ('Elvis Presley'),
+         ('Elvis Presley');
+
+
+INSERT INTO albums (album_name, released, genre, label, singer_id)
+  VALUES ('Born to Run', '1975-08-25', 'Rock and roll', 'Columbia', 1),
+         ('Purple Rain', '1984-06-25', 'Pop, R&B, Rock', 'Warner Bros', 6),
+         ('Born in the USA', '1984-06-04', 'Rock and roll, pop', 'Columbia', 1),
+         ('Madonna', '1983-07-27', 'Dance-pop, post-disco', 'Warner Bros', 5),
+         ('True Blue', '1986-06-30', 'Dance-pop, Pop', 'Warner Bros', 5),
+         ('Elvis', '1956-10-19', 'Rock and roll, Rhythm and Blues', 'RCA Victor', 7),
+         ('Sign o'' the Times', '1987-03-30', 'Pop, R&B, Rock, Funk', 'Paisley Park, Warner Bros', 6),
+         ('G.I. Blues', '1960-10-01', 'Rock and roll, Pop', 'RCA Victor', 7);
