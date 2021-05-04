@@ -136,3 +136,40 @@ INSERT INTO order_items(order_id, item_id)
 SELECT * FROM orders;
 
 SELECT * FROM order_items;
+
+-- products,
+-- orders
+-- order_items
+
+SELECT orders.id, products.name, products.cost, products.loyalty_points
+  FROM orders
+  JOIN order_items AS items ON (orders.id = items.order_id)
+  JOIN products ON (items.item_id = products.id);
+
+SELECT orders.id
+  FROM orders
+  JOIN order_items AS items ON (orders.id = items.order_id)
+  JOIN products ON (items.item_id = products.id)
+  WHERE products.name = 'Fries';
+
+SELECT DISTINCT(customers.name) AS "Customers who like Fries"
+  FROM customers
+  JOIN orders ON (orders.customer_id = customers.id)
+  JOIN order_items AS items ON (orders.id = items.order_id)
+  JOIN products ON (items.item_id = products.id)
+  WHERE products.name = 'Fries';
+
+SELECT orders.id, sum(products.cost)
+  FROM orders
+    JOIN order_items ON (orders.id = order_items.order_id)
+    JOIN products ON (order_items.item_id = products.id)
+    JOIN customers ON (orders.customer_id = customers.id)
+  WHERE customers.name = 'Natasha O''Shea'
+  GROUP BY orders.id;
+
+SELECT products.name, count(products.name) AS "count"
+  FROM order_items
+    JOIN products ON (order_items.item_id = products.id)
+    JOIN orders ON (order_items.order_id = orders.id)
+  GROUP BY products.name
+  ORDER BY products.name ASC;

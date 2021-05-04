@@ -182,13 +182,12 @@ CREATE TABLE albums (
 
 INSERT INTO singers (name)
   VALUES ('Bruce Springsteen'),
-         ('Prince'),
+         ('Turtle Master'),
+         ('Orange Dragon'),
+         ('Venomous Racoon'),
          ('Madonna'),
-         ('Elvis Presley'),
-         ('Elvis Presley'),
-         ('Elvis Presley'),
+         ('Prince'),
          ('Elvis Presley');
-
 
 INSERT INTO albums (album_name, released, genre, label, singer_id)
   VALUES ('Born to Run', '1975-08-25', 'Rock and roll', 'Columbia', 1),
@@ -199,3 +198,13 @@ INSERT INTO albums (album_name, released, genre, label, singer_id)
          ('Elvis', '1956-10-19', 'Rock and roll, Rhythm and Blues', 'RCA Victor', 7),
          ('Sign o'' the Times', '1987-03-30', 'Pop, R&B, Rock, Funk', 'Paisley Park, Warner Bros', 6),
          ('G.I. Blues', '1960-10-01', 'Rock and roll, Pop', 'RCA Victor', 7);
+
+SELECT countries.name, continents.name AS continent FROM countries JOIN continents ON (countries.continent_id = continents.id);
+
+SELECT countries.name, countries.capital FROM countries JOIN continents ON (countries.continent_id = continents.id) WHERE continents.name = 'Europe';
+
+SELECT DISTINCT(singers.name) FROM singers JOIN albums ON (singers.id = albums.singer_id) WHERE albums.label = 'Warner Bros';
+
+SELECT singers.name FROM singers LEFT JOIN albums ON (singers.id = albums.singer_id) WHERE albums.singer_id IS NULL;
+
+SELECT name FROM singers WHERE id NOT IN (SELECT singer_id FROM albums);
