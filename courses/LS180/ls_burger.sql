@@ -49,3 +49,29 @@ UPDATE orders SET side = 'Fries', side_cost = 0.99, customer_loyalty_points = 13
 UPDATE orders SET side_cost = 1.20 WHERE side = 'Fries';
 
 SELECT customer_name, customer_loyalty_points, burger, side, drink, side_cost FROM orders;
+
+CREATE TABLE customers (
+  id serial PRIMARY KEY,
+  name varchar(100)
+);
+
+CREATE TABLE email_addresses (
+  customer_id serial PRIMARY KEY,
+  email varchar(50) NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+INSERT INTO customers (name)
+  VALUES ('Natasha O''Shea'),
+         ('Jame Bergman'),
+         ('Aaron Muller');
+
+INSERT INTO email_addresses (email)
+  VALUES ('natasha@osheafamily.com'),
+        ('james1998@email.com');
+
+-- DELETE FROM customers WHERE name LIKE '%Natasha%';
+
+SELECT * FROM customers;
+
+SELECT * FROM email_addresses;
