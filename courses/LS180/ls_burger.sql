@@ -167,7 +167,7 @@ SELECT orders.id, sum(products.cost)
   WHERE customers.name = 'Natasha O''Shea'
   GROUP BY orders.id;
 
-SELECT products.name, count(products.name) AS "count"
+SELECT products.name, count(products.name)
   FROM order_items
     JOIN products ON (order_items.item_id = products.id)
     JOIN orders ON (order_items.order_id = orders.id)
