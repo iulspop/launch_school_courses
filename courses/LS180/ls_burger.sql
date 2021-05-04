@@ -75,3 +75,64 @@ INSERT INTO email_addresses (email)
 SELECT * FROM customers;
 
 SELECT * FROM email_addresses;
+
+CREATE TABLE products (
+  id serial PRIMARY KEY,
+  name varchar(50) NOT NULL,
+  cost decimal(4, 2) DEFAULT 0 NOT NULL,
+  type varchar(20) NOT NULL,
+  loyalty_points integer NOT NULL
+);
+
+INSERT INTO products (name, cost, type, loyalty_points)
+  VALUES ('LS Burger', 3.00, 'Burger', 10),
+         ('LS Cheeseburger', 3.50, 'Burger', 15 ),
+         ('LS Chicken Burger', 4.50, 'Burger', 20 ),
+         ('LS Double Deluxe Burger', 6.00, 'Burger', 30 ),
+         ('Fries', 1.20, 'Side', 3 ),
+         ('Onion Rings', 1.50, 'Side', 5 ),
+         ('Cola', 1.50, 'Drink', 5 ),
+         ('Lemonade', 1.50, 'Drink', 5 ),
+         ('Vanilla Shake', 2.00, 'Drink', 7 ),
+         ('Chocolate Shake', 2.00, 'Drink', 7 ),
+         ('Strawberry Shake', 2.00, 'Drink', 7);
+
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders (
+  id serial PRIMARY KEY,
+  customer_id integer REFERENCES customers(id) ON DELETE CASCADE,
+  order_status varchar(20)
+);
+
+CREATE TABLE order_items(
+  order_id integer REFERENCES orders(id) ON DELETE CASCADE,
+  item_id integer REFERENCES products(id) ON DELETE CASCADE
+);
+
+INSERT INTO orders(customer_id, order_status)
+  VALUES (2, 'In Progress'),
+         (1, 'Placed'),
+         (1, 'Complete'),
+         (3, 'Placed');
+
+INSERT INTO order_items(order_id, item_id)
+  VALUES (1, 3),
+         (1, 5),
+         (1, 6),
+         (1, 8),
+         (2, 2),
+         (2, 5),
+         (2, 7),
+         (3, 4),
+         (3, 2),
+         (3, 5),
+         (3, 5),
+         (3, 6),
+         (3, 10),
+         (3, 9),
+         (4, 1),
+         (4, 5);
+
+SELECT * FROM orders;
+
+SELECT * FROM order_items;
