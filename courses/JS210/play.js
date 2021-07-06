@@ -1,5 +1,5 @@
 function fizzbuzz() {
-  for (let i = 1; i <= 100; i++) {
+  times(100, (i) => {
     let isMultipleOf3 = i % 3 === 0;
     let isMultipleOf5 = i % 5 === 0;
 
@@ -11,6 +11,12 @@ function fizzbuzz() {
     ])
 
     console.log(output)
+  })
+}
+
+function times(number, callback) {
+  for (let i = 1; i <= number; i++) {
+    callback(i)
   }
 }
 
