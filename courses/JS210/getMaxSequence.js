@@ -41,6 +41,7 @@ function maxSequence(numbers) {
   if (numbers.every(isNegative)) { return 0 }
 
   let subSequences = getSubSequences(numbers);
+
   let sums = subSequences.map(subSequence => sum(subSequence));
 
   let maxSum = max(sums);
@@ -51,8 +52,8 @@ function maxSequence(numbers) {
 const isPositive = num => num >= 0;
 const isNegative = num => num <= 0;
 
-const getSum = (accumulator, number) => accumulator + number;
-const sum = numbers => numbers.reduce(getSum);
+const add = (accumulator, number) => accumulator + number;
+const sum = numbers => numbers.reduce(add);
 
 const getMax = (a, b) => Math.max(a, b);
 const max = numbers => numbers.reduce(getMax);
