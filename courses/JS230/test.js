@@ -17,5 +17,5 @@ function each(collection, fn) {
   }
 }
 
-// walk(document);
-// console.log(timesCalled);
+walk(document);
+console.log(timesCalled);
