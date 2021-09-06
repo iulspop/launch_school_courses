@@ -1,0 +1,13 @@
+.list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.item {
+  height: 50px;
+  background-color: lightgrey;
+}
+
+.list .item:nth-child(2n) {
+  background-color: aquamarine;
+}
